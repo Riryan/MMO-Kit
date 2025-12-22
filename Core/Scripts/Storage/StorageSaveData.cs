@@ -94,7 +94,10 @@ namespace MultiplayerARPG
                 var data = (StorageSaveData)formatter.Deserialize(stream);
 
                 storageItems.Clear();
-                storageItems.AddRange(data.storageItems);
+                if (data.storageItems != null && data.storageItems.Count > 0)
+                {
+                    storageItems.AddRange(data.storageItems);
+                }
             }
 #pragma warning restore SYSLIB0011
         }

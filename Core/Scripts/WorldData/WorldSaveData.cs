@@ -95,7 +95,10 @@ namespace MultiplayerARPG
                 var data = (WorldSaveData)formatter.Deserialize(stream);
 
                 buildings.Clear();
-                buildings.AddRange(data.buildings);
+                if (data.buildings != null && data.buildings.Count > 0)
+                {
+                    buildings.AddRange(data.buildings);
+                }
             }
 #pragma warning restore SYSLIB0011
         }

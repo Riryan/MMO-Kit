@@ -94,7 +94,10 @@ namespace MultiplayerARPG
                 var data = (SummonBuffsSaveData)formatter.Deserialize(stream);
 
                 summonBuffs.Clear();
-                summonBuffs.AddRange(data.summonBuffs);
+                if (data.summonBuffs != null && data.summonBuffs.Count > 0)
+                {
+                    summonBuffs.AddRange(data.summonBuffs);
+                }
             }
 #pragma warning restore SYSLIB0011
         }
