@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace MultiplayerARPG
@@ -11,43 +9,95 @@ namespace MultiplayerARPG
     {
         public List<BuildingSaveData> buildings = new List<BuildingSaveData>();
 
-        public void SavePersistentData(string id, string map)
+        private static string GetNewPath(string id, string map)
         {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            SurrogateSelector surrogateSelector = new SurrogateSelector();
-            surrogateSelector.AddAllUnitySurrogate();
-            BuildingSaveDataSerializationSurrogate buildingSaveDataSS = new BuildingSaveDataSerializationSurrogate();
-            WorldSaveDataSerializationSurrogate worldSaveDataSS = new WorldSaveDataSerializationSurrogate();
-            surrogateSelector.AddSurrogate(typeof(BuildingSaveData), new StreamingContext(StreamingContextStates.All), buildingSaveDataSS);
-            surrogateSelector.AddSurrogate(typeof(WorldSaveData), new StreamingContext(StreamingContextStates.All), worldSaveDataSS);
-            binaryFormatter.SurrogateSelector = surrogateSelector;
-            binaryFormatter.Binder = new PlayerCharacterDataTypeBinder();
-            string path = Application.persistentDataPath + "/" + id + "_world_" + map + ".sav";
-            FileStream file = File.Open(path, FileMode.OpenOrCreate);
-            binaryFormatter.Serialize(file, this);
-            file.Close();
+            return Application.persistentDataPath + "/" + id + "_world_" + map + ".wsd";
         }
 
+        private static string GetLegacyPath(string id, string map)
+        {
+            return Application.persistentDataPath + "/" + id + "_world_" + map + ".sav";
+        }
+
+        // =========================
+        // SAVE (NEW FORMAT ONLY)
+        // =========================
+        public void SavePersistentData(string id, string map)
+        {
+            string path = GetNewPath(id, map);
+
+            using (FileStream stream = File.Open(path, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(stream))
+            {
+                writer.Write(buildings.Count);
+                for (int i = 0; i < buildings.Count; ++i)
+                {
+                    buildings[i].Write(writer);
+                }
+            }
+        }
+
+        // =========================
+        // LOAD (NEW → LEGACY)
+        // =========================
         public void LoadPersistentData(string id, string map)
         {
-            string path = Application.persistentDataPath + "/" + id + "_world_" + map + ".sav";
             buildings.Clear();
-            if (File.Exists(path))
+
+            string newPath = GetNewPath(id, map);
+            if (File.Exists(newPath))
             {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                SurrogateSelector surrogateSelector = new SurrogateSelector();
-                surrogateSelector.AddAllUnitySurrogate();
-                BuildingSaveDataSerializationSurrogate buildingSaveDataSS = new BuildingSaveDataSerializationSurrogate();
-                WorldSaveDataSerializationSurrogate worldSaveDataSS = new WorldSaveDataSerializationSurrogate();
-                surrogateSelector.AddSurrogate(typeof(BuildingSaveData), new StreamingContext(StreamingContextStates.All), buildingSaveDataSS);
-                surrogateSelector.AddSurrogate(typeof(WorldSaveData), new StreamingContext(StreamingContextStates.All), worldSaveDataSS);
-                binaryFormatter.SurrogateSelector = surrogateSelector;
-                binaryFormatter.Binder = new PlayerCharacterDataTypeBinder();
-                FileStream file = File.Open(path, FileMode.Open);
-                WorldSaveData result = (WorldSaveData)binaryFormatter.Deserialize(file);
-                buildings = result.buildings;
-                file.Close();
+                LoadNew(newPath);
+                return;
             }
+
+            // ---- legacy fallback ----
+            string legacyPath = GetLegacyPath(id, map);
+            if (File.Exists(legacyPath))
+            {
+                LoadLegacyBinaryFormatter(legacyPath);
+
+                // migrate immediately
+                SavePersistentData(id, map);
+                File.Delete(legacyPath);
+            }
+        }
+
+        // =========================
+        // NEW FORMAT LOADER
+        // =========================
+        private void LoadNew(string path)
+        {
+            using (FileStream stream = File.OpenRead(path))
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                int count = reader.ReadInt32();
+                buildings.Capacity = count;
+
+                for (int i = 0; i < count; ++i)
+                {
+                    BuildingSaveData data = new BuildingSaveData();
+                    data.Read(reader);
+                    buildings.Add(data);
+                }
+            }
+        }
+
+        // =========================
+        // LEGACY LOADER (ONE TIME)
+        // =========================
+        private void LoadLegacyBinaryFormatter(string path)
+        {
+#pragma warning disable SYSLIB0011
+            using (FileStream stream = File.OpenRead(path))
+            {
+                var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                var data = (WorldSaveData)formatter.Deserialize(stream);
+
+                buildings.Clear();
+                buildings.AddRange(data.buildings);
+            }
+#pragma warning restore SYSLIB0011
         }
     }
 }

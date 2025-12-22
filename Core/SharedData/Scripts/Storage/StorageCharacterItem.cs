@@ -1,4 +1,5 @@
-﻿using Cysharp.Text;
+﻿using System.IO;
+using Cysharp.Text;
 using LiteNetLib.Utils;
 
 namespace MultiplayerARPG
@@ -15,11 +16,15 @@ namespace MultiplayerARPG
     public partial class StorageCharacterItem : INetSerializable
     {
         public static readonly StorageCharacterItem Empty = new StorageCharacterItem();
+
         public StorageType storageType;
         // Owner Id, for `Player` is user Id. `Building` is building Id. `Guild` is guild Id.
         public string storageOwnerId;
         public CharacterItem characterItem;
 
+        // =========================
+        // NETWORK SERIALIZATION
+        // =========================
         public void Serialize(NetDataWriter writer)
         {
             writer.Put((byte)storageType);
@@ -33,11 +38,52 @@ namespace MultiplayerARPG
             storageOwnerId = reader.GetString();
             characterItem = reader.Get(() => new CharacterItem());
         }
+
+        // =========================
+        // FILE SERIALIZATION (STORAGE SAVE)
+        // =========================
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write((byte)storageType);
+            writer.Write(storageOwnerId ?? string.Empty);
+
+            // CharacterItem
+            if (characterItem == null)
+            {
+                writer.Write(false);
+            }
+            else
+            {
+                writer.Write(true);
+                characterItem.Write(writer);
+            }
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            storageType = (StorageType)reader.ReadByte();
+            storageOwnerId = reader.ReadString();
+
+            bool hasItem = reader.ReadBoolean();
+            if (hasItem)
+            {
+                characterItem = new CharacterItem();
+                characterItem.Read(reader);
+            }
+            else
+            {
+                characterItem = null;
+            }
+        }
     }
 
+    // =========================
+    // IDS (UNCHANGED)
+    // =========================
     public struct StorageId
     {
         public static readonly StorageId Empty = new StorageId(StorageType.None, string.Empty);
+
         public StorageType storageType;
         public string storageOwnerId;
 
@@ -66,6 +112,7 @@ namespace MultiplayerARPG
     public struct StorageItemId
     {
         public static readonly StorageItemId Empty = new StorageItemId(StorageType.None, string.Empty, -1);
+
         public StorageType storageType;
         public string storageOwnerId;
         public int indexOfData;

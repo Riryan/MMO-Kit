@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace MultiplayerARPG
@@ -11,43 +9,94 @@ namespace MultiplayerARPG
     {
         public List<StorageCharacterItem> storageItems = new List<StorageCharacterItem>();
 
-        public void SavePersistentData(string id)
+        private static string GetNewPath(string id)
         {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            SurrogateSelector surrogateSelector = new SurrogateSelector();
-            surrogateSelector.AddAllUnitySurrogate();
-            StorageCharacterItemSerializationSurrogate storageCharacterItemSS = new StorageCharacterItemSerializationSurrogate();
-            StorageSaveDataSerializationSurrogate storageSaveDataSS = new StorageSaveDataSerializationSurrogate();
-            surrogateSelector.AddSurrogate(typeof(StorageCharacterItem), new StreamingContext(StreamingContextStates.All), storageCharacterItemSS);
-            surrogateSelector.AddSurrogate(typeof(StorageSaveData), new StreamingContext(StreamingContextStates.All), storageSaveDataSS);
-            binaryFormatter.SurrogateSelector = surrogateSelector;
-            binaryFormatter.Binder = new PlayerCharacterDataTypeBinder();
-            string path = Application.persistentDataPath + "/" + id + "_storage.sav";
-            FileStream file = File.Open(path, FileMode.OpenOrCreate);
-            binaryFormatter.Serialize(file, this);
-            file.Close();
+            return Application.persistentDataPath + "/" + id + "_storage.ssd";
         }
 
+        private static string GetLegacyPath(string id)
+        {
+            return Application.persistentDataPath + "/" + id + "_storage.sav";
+        }
+
+        // =========================
+        // SAVE (NEW FORMAT)
+        // =========================
+        public void SavePersistentData(string id)
+        {
+            string path = GetNewPath(id);
+
+            using (FileStream stream = File.Open(path, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(stream))
+            {
+                writer.Write(storageItems.Count);
+                for (int i = 0; i < storageItems.Count; ++i)
+                {
+                    storageItems[i].Write(writer);
+                }
+            }
+        }
+
+        // =========================
+        // LOAD (NEW → LEGACY)
+        // =========================
         public void LoadPersistentData(string id)
         {
-            string path = Application.persistentDataPath + "/" + id + "_storage.sav";
             storageItems.Clear();
-            if (File.Exists(path))
+
+            string newPath = GetNewPath(id);
+            if (File.Exists(newPath))
             {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                SurrogateSelector surrogateSelector = new SurrogateSelector();
-                surrogateSelector.AddAllUnitySurrogate();
-                StorageCharacterItemSerializationSurrogate storageCharacterItemSS = new StorageCharacterItemSerializationSurrogate();
-                StorageSaveDataSerializationSurrogate storageSaveDataSS = new StorageSaveDataSerializationSurrogate();
-                surrogateSelector.AddSurrogate(typeof(StorageCharacterItem), new StreamingContext(StreamingContextStates.All), storageCharacterItemSS);
-                surrogateSelector.AddSurrogate(typeof(StorageSaveData), new StreamingContext(StreamingContextStates.All), storageSaveDataSS);
-                binaryFormatter.SurrogateSelector = surrogateSelector;
-                binaryFormatter.Binder = new PlayerCharacterDataTypeBinder();
-                FileStream file = File.Open(path, FileMode.Open);
-                StorageSaveData result = (StorageSaveData)binaryFormatter.Deserialize(file);
-                storageItems = result.storageItems;
-                file.Close();
+                LoadNew(newPath);
+                return;
             }
+
+            string legacyPath = GetLegacyPath(id);
+            if (File.Exists(legacyPath))
+            {
+                LoadLegacyBinaryFormatter(legacyPath);
+
+                // migrate immediately
+                SavePersistentData(id);
+                File.Delete(legacyPath);
+            }
+        }
+
+        // =========================
+        // NEW FORMAT LOADER
+        // =========================
+        private void LoadNew(string path)
+        {
+            using (FileStream stream = File.OpenRead(path))
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                int count = reader.ReadInt32();
+                storageItems.Capacity = count;
+
+                for (int i = 0; i < count; ++i)
+                {
+                    StorageCharacterItem item = new StorageCharacterItem();
+                    item.Read(reader);
+                    storageItems.Add(item);
+                }
+            }
+        }
+
+        // =========================
+        // LEGACY LOADER (ONE-TIME)
+        // =========================
+        private void LoadLegacyBinaryFormatter(string path)
+        {
+#pragma warning disable SYSLIB0011
+            using (FileStream stream = File.OpenRead(path))
+            {
+                var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                var data = (StorageSaveData)formatter.Deserialize(stream);
+
+                storageItems.Clear();
+                storageItems.AddRange(data.storageItems);
+            }
+#pragma warning restore SYSLIB0011
         }
     }
 }

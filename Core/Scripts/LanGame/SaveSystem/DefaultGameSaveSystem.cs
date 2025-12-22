@@ -12,11 +12,14 @@ namespace MultiplayerARPG
         private readonly StorageSaveData hostStorageSaveData = new StorageSaveData();
         private readonly StorageSaveData playerStorageSaveData = new StorageSaveData();
         private readonly Dictionary<StorageId, List<CharacterItem>> playerStorageItems = new Dictionary<StorageId, List<CharacterItem>>();
+        private AsyncAutosaveService autosaveService;
         private bool isReadyToSave;
 
         public override void OnServerStart()
         {
             isReadyToSave = false;
+            autosaveService = new AsyncAutosaveService();
+            autosaveService.Start();
         }
 
         public override async UniTask PreSpawnEntities(IPlayerCharacterData hostPlayerCharacterData, IDictionary<StorageId, List<CharacterItem>> storageItems)
@@ -140,7 +143,8 @@ namespace MultiplayerARPG
                     });
                 }
             }
-            hostStorageSaveData.SavePersistentData(hostPlayerCharacterData.Id);
+            //hostStorageSaveData.SavePersistentData(hostPlayerCharacterData.Id);
+            autosaveService.Enqueue(new WorldSaveSnapshot( null, hostStorageSaveData.storageItems, null ));
         }
 
         public override void SavePlayerStorage(IPlayerCharacterData playerCharacterData, List<CharacterItem> storageItems)
@@ -175,7 +179,8 @@ namespace MultiplayerARPG
                 if (buildingEntity == null) continue;
                 worldSaveData.buildings.Add(buildingEntity.CloneTo(new BuildingSaveData()));
             }
-            worldSaveData.SavePersistentData(hostPlayerCharacterData.Id, BaseGameNetworkManager.CurrentMapInfo.Id);
+            //worldSaveData.SavePersistentData(hostPlayerCharacterData.Id, BaseGameNetworkManager.CurrentMapInfo.Id);
+            autosaveService.Enqueue(new WorldSaveSnapshot(    worldSaveData.buildings,    null,    null));
         }
 
         public override void SaveSummonBuffs(IPlayerCharacterData playerCharacterData, List<CharacterSummon> summons)
@@ -204,12 +209,14 @@ namespace MultiplayerARPG
                     });
                 }
             }
-            summonBuffsSaveData.SavePersistentData(playerCharacterData.Id);
+            //summonBuffsSaveData.SavePersistentData(playerCharacterData.Id);
+            autosaveService.Enqueue(new WorldSaveSnapshot(    null,    null,    summonBuffsSaveData.summonBuffs));
         }
 
         public override void OnSceneChanging()
         {
             isReadyToSave = false;
+            autosaveService?.StopAndFlush();
         }
     }
 }

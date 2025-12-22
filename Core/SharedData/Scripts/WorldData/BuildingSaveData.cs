@@ -1,4 +1,5 @@
-﻿using LiteNetLib.Utils;
+﻿using System.IO;
+using LiteNetLib.Utils;
 
 namespace MultiplayerARPG
 {
@@ -19,6 +20,9 @@ namespace MultiplayerARPG
         public string ExtraData { get; set; }
         public bool IsSceneObject { get; set; }
 
+        // =========================
+        // NETWORK SERIALIZATION
+        // =========================
         public void Deserialize(NetDataReader reader)
         {
             this.DeserializeBuildingSaveData(reader);
@@ -27,6 +31,59 @@ namespace MultiplayerARPG
         public void Serialize(NetDataWriter writer)
         {
             this.SerializeBuildingSaveData(writer);
+        }
+
+        // =========================
+        // FILE SERIALIZATION (WORLD SAVE)
+        // =========================
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(Id ?? string.Empty);
+            writer.Write(ParentId ?? string.Empty);
+            writer.Write(EntityId);
+            writer.Write(CurrentHp);
+            writer.Write(RemainsLifeTime);
+            writer.Write(IsLocked);
+            writer.Write(LockPassword ?? string.Empty);
+
+            writer.Write(Position.x);
+            writer.Write(Position.y);
+            writer.Write(Position.z);
+
+            writer.Write(Rotation.x);
+            writer.Write(Rotation.y);
+            writer.Write(Rotation.z);
+
+            writer.Write(CreatorId ?? string.Empty);
+            writer.Write(CreatorName ?? string.Empty);
+            writer.Write(ExtraData ?? string.Empty);
+            writer.Write(IsSceneObject);
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            Id = reader.ReadString();
+            ParentId = reader.ReadString();
+            EntityId = reader.ReadInt32();
+            CurrentHp = reader.ReadInt32();
+            RemainsLifeTime = reader.ReadSingle();
+            IsLocked = reader.ReadBoolean();
+            LockPassword = reader.ReadString();
+
+            Position = new Vec3(
+                reader.ReadSingle(),
+                reader.ReadSingle(),
+                reader.ReadSingle());
+
+            Rotation = new Vec3(
+                reader.ReadSingle(),
+                reader.ReadSingle(),
+                reader.ReadSingle());
+
+            CreatorId = reader.ReadString();
+            CreatorName = reader.ReadString();
+            ExtraData = reader.ReadString();
+            IsSceneObject = reader.ReadBoolean();
         }
     }
 }
