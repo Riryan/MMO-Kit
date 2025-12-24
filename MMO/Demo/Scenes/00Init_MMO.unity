@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+  m_AmbientSkyColor: {r: 0.8751256, g: 0.8751256, b: 0.8751256, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -136,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MMOServerInstance
       objectReference: {fileID: 0}
+    - target: {fileID: 1650234716345238, guid: d2c274d504629844ba9d4993edf72817, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4009622383931608, guid: d2c274d504629844ba9d4993edf72817, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -180,6 +183,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114035231915985668, guid: d2c274d504629844ba9d4993edf72817,
+        type: 3}
+      propertyPath: database
+      value: 
+      objectReference: {fileID: 259555352}
     - target: {fileID: 114946005600446132, guid: d2c274d504629844ba9d4993edf72817,
         type: 3}
       propertyPath: mapNetworkManager
@@ -190,6 +198,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2c274d504629844ba9d4993edf72817, type: 3}
+--- !u!114 &259555352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114715813743394434, guid: d2c274d504629844ba9d4993edf72817,
+    type: 3}
+  m_PrefabInstance: {fileID: 259555351}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f9248d29a5c4ce4285c1e7d937629bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &657742876
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -230,11 +250,42 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114125661795290440, guid: aea5f7c25eab33041b253c93bea7b0fd,
+        type: 3}
+      propertyPath: channels.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125661795290440, guid: aea5f7c25eab33041b253c93bea7b0fd,
+        type: 3}
+      propertyPath: channels.Array.data[0].id
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125661795290440, guid: aea5f7c25eab33041b253c93bea7b0fd,
+        type: 3}
+      propertyPath: channels.Array.data[0].title
+      value: o
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125661795290440, guid: aea5f7c25eab33041b253c93bea7b0fd,
+        type: 3}
+      propertyPath: channels.Array.data[0].maxConnections
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 114218027599039394, guid: aea5f7c25eab33041b253c93bea7b0fd,
         type: 3}
       propertyPath: mapNetworkManager
       value: 
       objectReference: {fileID: 1127565838}
+    - target: {fileID: 114218027599039394, guid: aea5f7c25eab33041b253c93bea7b0fd,
+        type: 3}
+      propertyPath: networkSettings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114218027599039394, guid: aea5f7c25eab33041b253c93bea7b0fd,
+        type: 3}
+      propertyPath: networkSettings.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 301c6fa4b55316144ad9eba089ef8426,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -485,7 +536,8 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 1.3555853e-19, y: 2.9726096e+29, z: 2.4775861e+32,
+    w: 240609060}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -549,25 +601,8 @@ MonoBehaviour:
   packetVersion: 1
   pingDuration: 1
   doNotEnterGameOnConnect: 0
+  doNotReadyOnSceneLoaded: 0
   doNotDestroyOnSceneChanges: 0
-  auctionHouseMessageTypes:
-    createAuctionRequestType: 1300
-    bidRequestType: 1301
-    buyoutRequestType: 1302
-    cancelAuctionRequestType: 1304
-    getClientConfigRequestType: 1303
-  auctionHouseServiceUrl: http://localhost:9800
-  auctionHouseServiceUrlForClient: http://localhost:9800
-  auctionHouseSecretKey: secret
-  hitToSomeoneNotifyMessageId: 2001
-  hitToSomeoneNotifyDataChannel: 0
-  hitToSomeoneNotifyDeliveryMethod: 4
-  hitFromSomeoneNotifyMessageId: 2002
-  hitFromSomeoneNotifyDataChannel: 0
-  hitFromSomeoneNotifyDeliveryMethod: 4
-  killNotifyMessageId: 2000
-  killNotifyDataChannel: 0
-  killNotifyDeliveryMethod: 1
   useUnityAutoPhysicSyncTransform: 1
   onSpawnEntitiesStart:
     m_PersistentCalls:
@@ -607,9 +642,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultVisibleRange: 80
   axisMode: 0
-  includeInactiveComponents: 1
   cellSize: 100
   updateInterval: 1
+  capHealthy: 256
+  capModerate: 124
+  capHeavy: 64
+  targetFrameMs: 16.7
+  capHysteresisSeconds: 2
+  tieToNetworkCaps: 1
+  rttHealthyMs: 80
+  rttModerateMs: 160
+  enableHarvestIntegration: 1
+  enableCapDebug: 0
+  capWarnThreshold: 0.8
+  capHitThreshold: 1
+  capDebugSamplePlayers: 3
+  capDebugMinInterval: 1
+  lastUpdateMs: 0
+  avgCellsSearched: 0
+  avgUnitsPerCell: 0
+  lastEffectiveCap: 0
+  lastFrameDtMs: 0
+  lastAvgKeptPerPlayer: 0
 --- !u!4 &1127565840
 Transform:
   m_ObjectHideFlags: 0
@@ -944,6 +998,7 @@ MonoBehaviour:
   itemLootRandomPartyMember: 0
   canPickupItemsWhichDropsByPlayersImmediately: 0
   dealingRequestDuration: 5
+  dealingItemsLimit: 16
   disableDealing: 0
   vendingItemsLimit: 16
   disableVending: 0
@@ -985,6 +1040,7 @@ MonoBehaviour:
     includeMount: 0
     includeSkill: 0
   canRefineItemByPlayer: 0
+  refineEnhancerItemsLimit: 16
   canDismantleItemByPlayer: 0
   canRepairItemByPlayer: 0
   inventorySystem: 1

@@ -160,7 +160,7 @@ MonoBehaviour:
   webSocketSecure: 0
   webSocketCertificateFilePath: 
   webSocketCertificatePassword: 
-  updateFps: 10
+  updateFps: 20
   maxConnections: 4
   transportFactory: {fileID: 0}
   packetVersion: 1
@@ -253,7 +253,7 @@ MonoBehaviour:
   tieToNetworkCaps: 1
   rttHealthyMs: 80
   rttModerateMs: 160
-  enableHarvestIntegration: 0
+  enableHarvestIntegration: 1
   enableCapDebug: 0
   capWarnThreshold: 0.8
   capHitThreshold: 1
@@ -457,75 +457,93 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_Pivot.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+    - target: {fileID: 224403346423736254, guid: eb6737dc528a143499748ce0d673b59c,
+        type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -678,18 +696,30 @@ MonoBehaviour:
   gmCommands: {fileID: 0}
   equipmentModelBonesSetupManager: {fileID: 0}
   networkSetting: {fileID: 11400000, guid: c0825e8ee894749459ab4c8dda26dfe6, type: 2}
-  itemDropEntityPrefab: {fileID: 114247390284341630, guid: 611b907cf80c87a4eb9e0d5d4a8688f5, type: 3}
-  expDropEntityPrefab: {fileID: 8817935362424336320, guid: 04ddef1b9ba6c5b4d9ecd7e0340ec925, type: 3}
-  goldDropEntityPrefab: {fileID: 6295088762808422426, guid: c7b59ee4aa52d314d82d250d5e5be808, type: 3}
-  currencyDropEntityPrefab: {fileID: 8817935362424336320, guid: 22d8a0b1d2e2d4e45b293aca8bdde705, type: 3}
-  warpPortalEntityPrefab: {fileID: 114731892942428866, guid: 5773ff22c96e3ab4bb12d8202ec86244, type: 3}
-  playerCorpsePrefab: {fileID: 9036829038788336466, guid: d98696903f1afa34fba36b435c7fb329, type: 3}
-  monsterCorpsePrefab: {fileID: 9036829038788336466, guid: d98696903f1afa34fba36b435c7fb329, type: 3}
-  uiSceneGameplayPrefab: {fileID: 114088817493988554, guid: 4af36d4bdf0cf07409f4412130b793ec, type: 3}
-  uiSceneGameplayMobilePrefab: {fileID: 114630585920460692, guid: 70474cf4f9f686c45b0305621722205f, type: 3}
-  uiSceneGameplayConsolePrefab: {fileID: 114630585920460692, guid: 9d2b800b808080849ac2a18372ae1c05, type: 3}
-  defaultControllerPrefab: {fileID: 114096437919969166, guid: 147be1283e4eb834d94ad1c905a031e7, type: 3}
-  serverCharacterPrefab: {fileID: 114427175623056218, guid: 5d1fef0b895ca2a43899fb0236936a59, type: 3}
+  itemDropEntityPrefab: {fileID: 114247390284341630, guid: 611b907cf80c87a4eb9e0d5d4a8688f5,
+    type: 3}
+  expDropEntityPrefab: {fileID: 8817935362424336320, guid: 04ddef1b9ba6c5b4d9ecd7e0340ec925,
+    type: 3}
+  goldDropEntityPrefab: {fileID: 6295088762808422426, guid: c7b59ee4aa52d314d82d250d5e5be808,
+    type: 3}
+  currencyDropEntityPrefab: {fileID: 8817935362424336320, guid: 22d8a0b1d2e2d4e45b293aca8bdde705,
+    type: 3}
+  warpPortalEntityPrefab: {fileID: 114731892942428866, guid: 5773ff22c96e3ab4bb12d8202ec86244,
+    type: 3}
+  playerCorpsePrefab: {fileID: 9036829038788336466, guid: d98696903f1afa34fba36b435c7fb329,
+    type: 3}
+  monsterCorpsePrefab: {fileID: 9036829038788336466, guid: d98696903f1afa34fba36b435c7fb329,
+    type: 3}
+  uiSceneGameplayPrefab: {fileID: 114088817493988554, guid: 4af36d4bdf0cf07409f4412130b793ec,
+    type: 3}
+  uiSceneGameplayMobilePrefab: {fileID: 114630585920460692, guid: 70474cf4f9f686c45b0305621722205f,
+    type: 3}
+  uiSceneGameplayConsolePrefab: {fileID: 114630585920460692, guid: 9d2b800b808080849ac2a18372ae1c05,
+    type: 3}
+  defaultControllerPrefab: {fileID: 114096437919969166, guid: 147be1283e4eb834d94ad1c905a031e7,
+    type: 3}
+  serverCharacterPrefab: {fileID: 114427175623056218, guid: 5d1fef0b895ca2a43899fb0236936a59,
+    type: 3}
   owningCharacterObjects:
   - {fileID: 1555851488130254, guid: 90f99869b96e2df4bae83e1f870b68ec, type: 3}
   - {fileID: 5914040168613522836, guid: a854feb116427e540a5620c7d0d13661, type: 3}
@@ -707,12 +737,17 @@ MonoBehaviour:
   npcObjects: []
   npcMiniMapObjects:
   - {fileID: 1971649022222436, guid: 3ad746095a8b209429a1b9e27fab61aa, type: 3}
-  owningCharacterUI: {fileID: 114899762762614018, guid: 8447ca51d1886764e99f26df8033c4c5, type: 3}
-  nonOwningCharacterUI: {fileID: 114899762762614018, guid: cf8cfe06d3da49e4ab083bd040961dd5, type: 3}
-  monsterCharacterUI: {fileID: 114127719814556812, guid: 3570a7d7c31a7704f92f9ffd3242ff3c, type: 3}
+  owningCharacterUI: {fileID: 114899762762614018, guid: 8447ca51d1886764e99f26df8033c4c5,
+    type: 3}
+  nonOwningCharacterUI: {fileID: 114899762762614018, guid: cf8cfe06d3da49e4ab083bd040961dd5,
+    type: 3}
+  monsterCharacterUI: {fileID: 114127719814556812, guid: 3570a7d7c31a7704f92f9ffd3242ff3c,
+    type: 3}
   npcUI: {fileID: 114537631033164756, guid: b75f7de46d27c284d913d9b2984ff84d, type: 3}
-  npcQuestIndicator: {fileID: 114612624042908474, guid: 4acaa26309bf3094094eec89f99e2972, type: 3}
-  levelUpEffect: {fileID: 114843870614705530, guid: 6f6e255b4877f874c985ed9fb46293a1, type: 3}
+  npcQuestIndicator: {fileID: 114612624042908474, guid: 4acaa26309bf3094094eec89f99e2972,
+    type: 3}
+  levelUpEffect: {fileID: 114843870614705530, guid: 6f6e255b4877f874c985ed9fb46293a1,
+    type: 3}
   stunEffects: []
   muteEffects: []
   freezeEffects: []
@@ -720,7 +755,8 @@ MonoBehaviour:
   gameDatabase: {fileID: 11400000, guid: 78362f3a31c322e4396aa7f42ea58f99, type: 2}
   npcDatabase: {fileID: 11400000, guid: dae14f7f7d125fc4096ba7ac1f68d581, type: 2}
   warpPortalDatabase: {fileID: 11400000, guid: 6a5e8bb8645bbb349a05709f9b37b5df, type: 2}
-  socialSystemSetting: {fileID: 11400000, guid: afad462dae207414f91b207f6882dad2, type: 2}
+  socialSystemSetting: {fileID: 11400000, guid: afad462dae207414f91b207f6882dad2,
+    type: 2}
   defaultWeaponItem: {fileID: 11400000, guid: 7a97cfad0e4b1ee49ba6f735b4b1b0d9, type: 2}
   defaultDamageElement: {fileID: 0}
   defaultDamageHitEffects:
@@ -831,12 +867,13 @@ MonoBehaviour:
   petDeadLockDuration: 60
   petUnSummonLockDuration: 30
   joinInstanceMapDistance: 20
-  newCharacterSetting: {fileID: 11400000, guid: 96c4888e481bfee4887f1537d72da080, type: 2}
+  newCharacterSetting: {fileID: 11400000, guid: 96c4888e481bfee4887f1537d72da080,
+    type: 2}
   startGold: 0
   startItems: []
   homeScene:
-    sceneAsset: {fileID: 102900000, guid: ade6fa5747c04c54b99f067a5ed7f2f1, type: 3}
-    sceneName: 01Home
+    sceneAsset: {fileID: 102900000, guid: d529c814bb9fcd14289ac4141b27e951, type: 3}
+    sceneName: 01Home_MMO
   homeMobileScene:
     sceneAsset: {fileID: 0}
     sceneName: 
@@ -910,7 +947,8 @@ MonoBehaviour:
   - keyName: RotateRight
     keyCode: 107
   settingsSaveKeyPrefix: SETTING_KEY_BIND
-  inputActionAsset: {fileID: -944628639613478452, guid: b7b0acfa1d32d3f4fb4dd990fef8568c, type: 3}
+  inputActionAsset: {fileID: -944628639613478452, guid: b7b0acfa1d32d3f4fb4dd990fef8568c,
+    type: 3}
 --- !u!114 &1379718505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2178,7 +2216,8 @@ LightingSettings:
   m_RespectSceneVisibilityWhenBakingGI: 0
 --- !u!114 &1803291193 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114779210844791916, guid: eb6737dc528a143499748ce0d673b59c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 114779210844791916, guid: eb6737dc528a143499748ce0d673b59c,
+    type: 3}
   m_PrefabInstance: {fileID: 846140300}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

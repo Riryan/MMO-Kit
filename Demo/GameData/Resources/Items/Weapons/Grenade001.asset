@@ -24,21 +24,14 @@ MonoBehaviour:
   maxStack: 1
   itemRefine: {fileID: 11400000, guid: b8c5078d91a221c47a13beb39dcfc030, type: 2}
   lockDuration: 0
-  expireDurationUnit: 2
-  expireDuration: 0
   dropModel: {fileID: 1493009791342948, guid: 1ae15d9c56d768f42b46f3abac423b10, type: 3}
   dismantleReturnGold: 0
   dismantleReturnItems: []
-  dismantleReturnCurrencies: []
-  restrictDealing: 0
-  restrictDropping: 0
-  restrictSelling: 0
   cashShopItemGeneratingList: []
   equipmentModels: []
   requirement:
     availableClass: {fileID: 0}
     availableClasses: []
-    availableFactions: []
     level: 0
     attributeAmounts: []
   equipmentSet: {fileID: 0}
@@ -70,13 +63,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
+      testStats: 0
     statsIncreaseEachLevel:
       hp: 0
       hpRecovery: 0
@@ -101,14 +88,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
-    statsIncreaseEachLevelByLevels: []
+      testStats: 0
   increaseStatsRate:
     baseStats:
       hp: 0
@@ -134,13 +114,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
+      testStats: 0
     statsIncreaseEachLevel:
       hp: 0
       hpRecovery: 0
@@ -165,24 +139,13 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
-    statsIncreaseEachLevelByLevels: []
+      testStats: 0
   increaseAttributes: []
   increaseAttributesRate: []
   increaseResistances: []
   increaseArmors: []
-  increaseArmorsRate: []
   increaseDamages: []
-  increaseDamagesRate: []
   increaseSkillLevels: []
-  increaseSkills: []
-  increaseStatusEffectResistances: []
   selfStatusEffectsWhenAttacking: []
   enemyStatusEffectsWhenAttacking: []
   selfStatusEffectsWhenAttacked: []
@@ -259,24 +222,6 @@ MonoBehaviour:
       minExpRate: 0
       maxExpRate: 0
       expRateApplyRate: 0
-      minItemDropRate: 0
-      maxItemDropRate: 0
-      itemDropRateApplyRate: 0
-      minJumpHeight: 0
-      maxJumpHeight: 0
-      jumpHeightApplyRate: 0
-      minHeadDamageAbsorbs: 0
-      maxHeadDamageAbsorbs: 0
-      headDamageAbsorbsApplyRate: 0
-      minBodyDamageAbsorbs: 0
-      maxBodyDamageAbsorbs: 0
-      bodyDamageAbsorbsApplyRate: 0
-      minFallDamageAbsorbs: 0
-      maxFallDamageAbsorbs: 0
-      fallDamageAbsorbsApplyRate: 0
-      minGravityRate: 0
-      maxGravityRate: 0
-      gravityRateApplyRate: 0
     randomCharacterStatsRate:
       minHp: 0
       maxHp: 0
@@ -347,35 +292,17 @@ MonoBehaviour:
       minExpRate: 0
       maxExpRate: 0
       expRateApplyRate: 0
-      minItemDropRate: 0
-      maxItemDropRate: 0
-      itemDropRateApplyRate: 0
-      minJumpHeight: 0
-      maxJumpHeight: 0
-      jumpHeightApplyRate: 0
-      minHeadDamageAbsorbs: 0
-      maxHeadDamageAbsorbs: 0
-      headDamageAbsorbsApplyRate: 0
-      minBodyDamageAbsorbs: 0
-      maxBodyDamageAbsorbs: 0
-      bodyDamageAbsorbsApplyRate: 0
-      minFallDamageAbsorbs: 0
-      maxFallDamageAbsorbs: 0
-      fallDamageAbsorbsApplyRate: 0
-      minGravityRate: 0
-      maxGravityRate: 0
-      gravityRateApplyRate: 0
     randomAttributeAmounts: []
     randomAttributeAmountRates: []
     randomResistanceAmounts: []
     randomArmorAmounts: []
-    randomArmorAmountRates: []
     randomDamageAmounts: []
-    randomDamageAmountRates: []
     randomSkillLevels: []
+  spriteData:
+    part: 0
+    id: 
+    color: {r: 0, g: 0, b: 0, a: 0}
   offHandEquipmentModels: []
-  sheathModels: []
-  offHandSheathModels: []
   weaponType: {fileID: 11400000, guid: a10c36dadc50a1e48881f48483f2ccc6, type: 2}
   damageAmount:
     damageElement: {fileID: 11400000, guid: 3afa55aee773f47438e6f7f3a03cd0b9, type: 2}
@@ -386,7 +313,6 @@ MonoBehaviour:
       amountIncreaseEachLevel:
         min: 0
         max: 0
-      amountIncreaseEachLevelByLevels: []
   harvestDamageAmount:
     baseAmount:
       min: 0
@@ -394,31 +320,11 @@ MonoBehaviour:
     amountIncreaseEachLevel:
       min: 0
       max: 0
-    amountIncreaseEachLevelByLevels: []
   moveSpeedRateWhileReloading: 1
   moveSpeedRateWhileCharging: 1
   moveSpeedRateWhileAttacking: 1
-  movementRestrictionWhileReloading:
-    jumpRestricted: 0
-    turnRestricted: 0
-  movementRestrictionWhileCharging:
-    jumpRestricted: 0
-    turnRestricted: 0
-  movementRestrictionWhileAttacking:
-    jumpRestricted: 0
-    turnRestricted: 0
-  attackRestriction:
-    restrictedWhileAirborne: 0
-    restrictedWhileCrouching: 0
-    restrictedWhileCrawling: 0
-  reloadRestriction:
-    restrictedWhileAirborne: 0
-    restrictedWhileCrouching: 0
-    restrictedWhileCrawling: 0
-  ammoItems: []
   ammoCapacity: 0
   weaponAbility: {fileID: 0}
-  weaponAbilities: []
   crosshairSetting:
     hidden: 0
     expandPerFrameWhileMoving: 0
@@ -427,28 +333,16 @@ MonoBehaviour:
     shrinkPerFrameWhenAttacked: 0
     minSpread: 0
     maxSpread: 0
-    recoilPitch: 0
-    recoilYaw: 0
-    recoilRoll: 0
+    recoilX: 0
+    recoilY: 0
   launchClip: {fileID: 0}
-  launchClips: []
-  launchClipSettings:
-  - audioClip: {fileID: 8300000, guid: 543fbe2f32e015749bafb0f7691eb41b, type: 3}
-    minRandomVolume: 1
-    maxRandomVolume: 1
+  launchClips:
+  - {fileID: 8300000, guid: 543fbe2f32e015749bafb0f7691eb41b, type: 3}
   reloadClip: {fileID: 0}
   reloadClips: []
-  reloadClipSettings: []
-  reloadedClip: {fileID: 0}
-  reloadedClips: []
-  reloadedClipSettings: []
   emptyClip: {fileID: 0}
   emptyClips: []
-  emptyClipSettings: []
   fireType: 2
-  rateOfFire: 0
-  reloadDuration: 0
   fireStagger: {x: 0, y: 0}
   fireSpread: 0
-  chargeDuration: 0
   destroyImmediatelyAfterFired: 1

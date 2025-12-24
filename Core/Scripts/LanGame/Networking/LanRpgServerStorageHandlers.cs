@@ -7,9 +7,9 @@ namespace MultiplayerARPG
 {
     public partial class LanRpgServerStorageHandlers : MonoBehaviour, IServerStorageHandlers
     {
-        private readonly ConcurrentDictionary<StorageId, List<CharacterItem>> storageItems = new ConcurrentDictionary<StorageId, List<CharacterItem>>();
-        private readonly ConcurrentDictionary<StorageId, HashSet<long>> usingStorageClients = new ConcurrentDictionary<StorageId, HashSet<long>>();
-        private readonly ConcurrentDictionary<long, StorageId> usingStorageIds = new ConcurrentDictionary<long, StorageId>();
+        private readonly Dictionary<StorageId, List<CharacterItem>> storageItems = new Dictionary<StorageId, List<CharacterItem>>();
+        private readonly Dictionary<StorageId, HashSet<long>> usingStorageClients = new Dictionary<StorageId, HashSet<long>>();
+        private readonly Dictionary<long, StorageId> usingStorageIds = new Dictionary<long, StorageId>();
 
         public async UniTaskVoid OpenStorage(long connectionId, IPlayerCharacterData playerCharacter, StorageId storageId)
         {
@@ -23,7 +23,7 @@ namespace MultiplayerARPG
             if (!usingStorageClients.ContainsKey(storageId))
                 usingStorageClients.TryAdd(storageId, new HashSet<long>());
             usingStorageClients[storageId].Add(connectionId);
-            usingStorageIds.TryRemove(connectionId, out _);
+            usingStorageIds.Remove(connectionId, out _);
             usingStorageIds.TryAdd(connectionId, storageId);
             // Notify storage items to client
             Storage storage = GetStorage(storageId, out uint storageObjectId);
@@ -39,7 +39,7 @@ namespace MultiplayerARPG
             if (usingStorageIds.TryGetValue(connectionId, out StorageId storageId) && usingStorageClients.ContainsKey(storageId))
             {
                 usingStorageClients[storageId].Remove(connectionId);
-                usingStorageIds.TryRemove(connectionId, out _);
+                usingStorageIds.Remove(connectionId, out _);
                 GameInstance.ServerGameMessageHandlers.NotifyStorageClosed(connectionId);
             }
         }

@@ -36,7 +36,7 @@ namespace MultiplayerARPG
         private Vector3? _teleportPosition;
         private readonly Dictionary<long, PlayerCharacterData> _pendingSpawnPlayerCharacters = new Dictionary<long, PlayerCharacterData>();
         private readonly Dictionary<long, List<CharacterBuff>> _pendingSpawnPlayerCharacterSummonBuffs = new Dictionary<long, List<CharacterBuff>>();
-
+        private float _serverAutoSaveTimer;
         public LiteNetLibDiscovery CacheDiscovery { get; private set; }
         public BaseGameSaveSystem SaveSystem { get { return GameInstance.Singleton.SaveSystem; } }
 
@@ -192,21 +192,32 @@ namespace MultiplayerARPG
             }
             Profiler.EndSample();
         }
-
+#if !UNITY_SERVER
+        [SerializeField] private float clientNetworkHz = 20f; // try 20, later 10
+        private float _clientNetTimer;
+#endif
         protected override void Update()
         {
+#if !UNITY_SERVER
+            _clientNetTimer += Time.unscaledDeltaTime;
+            if (_clientNetTimer < (1f / clientNetworkHz))
+                return;
+            _clientNetTimer = 0f;
+#endif
             base.Update();
-            float tempTime = Time.unscaledTime;
-            if (tempTime - _lastSaveTime > autoSaveDuration)
-            {
-                Save();
-                _lastSaveTime = tempTime;
-            }
         }
+
 
         protected override void OnServerUpdate(LogicUpdater updater)
         {
             base.OnServerUpdate(updater);
+            //Autosave Moved from Update to here (server-tick only)
+            _serverAutoSaveTimer += (float)updater.DeltaTime;
+            if (_serverAutoSaveTimer >= autoSaveDuration)
+            {
+                Save();
+                _serverAutoSaveTimer = 0f;
+            }
             if (_pendingSpawnPlayerCharacters.Count > 0 && _isServerReadyToInstantiatePlayers)
             {
                 // Spawn pending player characters

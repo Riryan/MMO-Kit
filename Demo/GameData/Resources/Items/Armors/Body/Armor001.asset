@@ -24,117 +24,41 @@ MonoBehaviour:
   maxStack: 1
   itemRefine: {fileID: 11400000, guid: b8c5078d91a221c47a13beb39dcfc030, type: 2}
   lockDuration: 0
-  expireDurationUnit: 2
-  expireDuration: 0
   dropModel: {fileID: 1788792654363946, guid: 8da4f5a11c78d934382a50e10216b394, type: 3}
   dismantleReturnGold: 50
   dismantleReturnItems: []
-  dismantleReturnCurrencies: []
-  restrictDealing: 0
-  restrictDropping: 0
-  restrictSelling: 0
   cashShopItemGeneratingList: []
+  spriteData:
+    part: 0
+    id: 
+    color: {r: 0, g: 0, b: 0, a: 0}
   itemType: 1
-  useItemCooldown: 0
-  autoUseKey: 
   equipmentModels:
   - equipSocket: Chest
     useInstantiatedObject: 0
-    meshPrefab: {fileID: 1000010742443270, guid: 0b3f64650c398574db5d2ec22694cff6, type: 3}
+    model: {fileID: 1000010742443270, guid: 0b3f64650c398574db5d2ec22694cff6, type: 3}
     instantiatedObjectIndex: 0
-    priority: 0
-    doNotSetupBones: 0
-    equipmentModelBonesSetupManager: {fileID: 0}
     localPosition: {x: 0, y: 0, z: 0}
     localEulerAngles: {x: 0, y: 0, z: 0}
-    doNotChangeScale: 0
     localScale: {x: 0, y: 0, z: 0}
-    useSpecificSheathEquipWeaponSet: 0
-    specificSheathEquipWeaponSet: 0
-    indexOfModel: -1
-    equipPosition: 
-    item:
-      id: 
-      dataId: 0
-      level: 0
-      amount: 0
-      equipSlotIndex: 0
-      durability: 0
-      exp: 0
-      lockRemainsDuration: 0
-      expireTime: 0
-      randomSeed: 0
-      ammoDataId: 0
-      ammo: 0
-      sockets: 
-      version: 0
   - equipSocket: Spine
     useInstantiatedObject: 0
-    meshPrefab: {fileID: 1000010898317680, guid: 5c929cd4648b9d5409769703879eff59, type: 3}
+    model: {fileID: 1000010898317680, guid: 5c929cd4648b9d5409769703879eff59, type: 3}
     instantiatedObjectIndex: 0
-    priority: 0
-    doNotSetupBones: 0
-    equipmentModelBonesSetupManager: {fileID: 0}
     localPosition: {x: 0, y: 0, z: 0}
     localEulerAngles: {x: 0, y: 0, z: 0}
-    doNotChangeScale: 0
     localScale: {x: 0, y: 0, z: 0}
-    useSpecificSheathEquipWeaponSet: 0
-    specificSheathEquipWeaponSet: 0
-    indexOfModel: -1
-    equipPosition: 
-    item:
-      id: 
-      dataId: 0
-      level: 0
-      amount: 0
-      equipSlotIndex: 0
-      durability: 0
-      exp: 0
-      lockRemainsDuration: 0
-      expireTime: 0
-      randomSeed: 0
-      ammoDataId: 0
-      ammo: 0
-      sockets: 
-      version: 0
   - equipSocket: LowerSpine
     useInstantiatedObject: 0
-    meshPrefab: {fileID: 1000012894407150, guid: c1c6899f0771eb246a75ae6bd2f9ae0e, type: 3}
+    model: {fileID: 1000012894407150, guid: c1c6899f0771eb246a75ae6bd2f9ae0e, type: 3}
     instantiatedObjectIndex: 0
-    priority: 0
-    doNotSetupBones: 0
-    equipmentModelBonesSetupManager: {fileID: 0}
     localPosition: {x: 0, y: 0, z: 0}
     localEulerAngles: {x: 0, y: 0, z: 0}
-    doNotChangeScale: 0
     localScale: {x: 0, y: 0, z: 0}
-    useSpecificSheathEquipWeaponSet: 0
-    specificSheathEquipWeaponSet: 0
-    indexOfModel: -1
-    equipPosition: 
-    item:
-      id: 
-      dataId: 0
-      level: 0
-      amount: 0
-      equipSlotIndex: 0
-      durability: 0
-      exp: 0
-      lockRemainsDuration: 0
-      expireTime: 0
-      randomSeed: 0
-      ammoDataId: 0
-      ammo: 0
-      sockets: 
-      version: 0
-  offHandEquipmentModels: []
-  sheathModels: []
-  offHandSheathModels: []
+  subEquipmentModels: []
   requirement:
     availableClass: {fileID: 0}
     availableClasses: []
-    availableFactions: []
     level: 0
     attributeAmounts: []
   equipmentSet: {fileID: 11400000, guid: 20999d469e915904f936510d5cecf079, type: 2}
@@ -147,7 +71,6 @@ MonoBehaviour:
     amount:
       baseAmount: 0
       amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
   weaponType: {fileID: 0}
   damageAmount:
     damageElement: {fileID: 0}
@@ -158,7 +81,6 @@ MonoBehaviour:
       amountIncreaseEachLevel:
         min: 0
         max: 0
-      amountIncreaseEachLevelByLevels: []
   harvestDamageAmount:
     baseAmount:
       min: 0
@@ -166,31 +88,11 @@ MonoBehaviour:
     amountIncreaseEachLevel:
       min: 0
       max: 0
-    amountIncreaseEachLevelByLevels: []
   moveSpeedRateWhileReloading: 1
   moveSpeedRateWhileCharging: 1
   moveSpeedRateWhileAttacking: 0
-  movementRestrictionWhileReloading:
-    jumpRestricted: 0
-    turnRestricted: 0
-  movementRestrictionWhileCharging:
-    jumpRestricted: 0
-    turnRestricted: 0
-  movementRestrictionWhileAttacking:
-    jumpRestricted: 0
-    turnRestricted: 0
-  attackRestriction:
-    restrictedWhileAirborne: 0
-    restrictedWhileCrouching: 0
-    restrictedWhileCrawling: 0
-  reloadRestriction:
-    restrictedWhileAirborne: 0
-    restrictedWhileCrouching: 0
-    restrictedWhileCrawling: 0
-  ammoItems: []
   ammoCapacity: 0
   weaponAbility: {fileID: 0}
-  weaponAbilities: []
   crosshairSetting:
     hidden: 0
     expandPerFrameWhileMoving: 3
@@ -199,32 +101,34 @@ MonoBehaviour:
     shrinkPerFrameWhenAttacked: 0
     minSpread: 10
     maxSpread: 50
-    recoilPitch: 0
-    recoilYaw: 0
-    recoilRoll: 0
+    recoilX: 0
+    recoilY: 0
   launchClip: {fileID: 0}
-  launchClipSettings: []
   reloadClip: {fileID: 0}
-  reloadClipSettings: []
-  reloadedClip: {fileID: 0}
-  reloadedClipSettings: []
   emptyClip: {fileID: 0}
-  emptyClipSettings: []
   fireType: 0
-  rateOfFire: 0
-  reloadDuration: 0
   fireStagger: {x: 0, y: 0}
   fireSpread: 0
-  chargeDuration: 0
   destroyImmediatelyAfterFired: 0
   buff:
-    tag: 
-    restrictTags: []
-    enableApplyChance: 0
-    applyChance:
+    duration:
       baseAmount: 0
       amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
+    recoveryHp:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryMp:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryStamina:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryFood:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
+    recoveryWater:
+      baseAmount: 0
+      amountIncreaseEachLevel: 0
     increaseStats:
       baseStats:
         hp: 0
@@ -250,13 +154,7 @@ MonoBehaviour:
         slotLimit: 0
         goldRate: 0
         expRate: 0
-        itemDropRate: 0
-        jumpHeight: 0
-        headDamageAbsorbs: 0
-        bodyDamageAbsorbs: 0
-        fallDamageAbsorbs: 0
-        gravityRate: 0
-        testStat1: 0
+        testStats: 0
       statsIncreaseEachLevel:
         hp: 0
         hpRecovery: 0
@@ -281,14 +179,7 @@ MonoBehaviour:
         slotLimit: 0
         goldRate: 0
         expRate: 0
-        itemDropRate: 0
-        jumpHeight: 0
-        headDamageAbsorbs: 0
-        bodyDamageAbsorbs: 0
-        fallDamageAbsorbs: 0
-        gravityRate: 0
-        testStat1: 0
-      statsIncreaseEachLevelByLevels: []
+        testStats: 0
     increaseStatsRate:
       baseStats:
         hp: 0
@@ -314,13 +205,7 @@ MonoBehaviour:
         slotLimit: 0
         goldRate: 0
         expRate: 0
-        itemDropRate: 0
-        jumpHeight: 0
-        headDamageAbsorbs: 0
-        bodyDamageAbsorbs: 0
-        fallDamageAbsorbs: 0
-        gravityRate: 0
-        testStat1: 0
+        testStats: 0
       statsIncreaseEachLevel:
         hp: 0
         hpRecovery: 0
@@ -345,94 +230,31 @@ MonoBehaviour:
         slotLimit: 0
         goldRate: 0
         expRate: 0
-        itemDropRate: 0
-        jumpHeight: 0
-        headDamageAbsorbs: 0
-        bodyDamageAbsorbs: 0
-        fallDamageAbsorbs: 0
-        gravityRate: 0
-        testStat1: 0
-      statsIncreaseEachLevelByLevels: []
+        testStats: 0
     increaseAttributes: []
     increaseAttributesRate: []
     increaseResistances: []
     increaseArmors: []
-    increaseArmorsRate: []
     increaseDamages: []
-    increaseDamagesRate: []
-    increaseStatusEffectResistances: []
-    duration:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    recoveryHp:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    recoveryMp:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    recoveryStamina:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    recoveryFood:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    recoveryWater:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    buffRemovals: []
     damageOverTimes: []
     ailment: 0
     disallowMove: 0
-    disallowSprint: 0
-    disallowWalk: 0
-    disallowJump: 0
-    disallowCrouch: 0
-    disallowCrawl: 0
     disallowAttack: 0
     disallowUseSkill: 0
     disallowUseItem: 0
     freezeAnimation: 0
-    removeBuffWhenAttackChance:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    removeBuffWhenAttackedChance:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    removeBuffWhenUseSkillChance:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    removeBuffWhenUseItemChance:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    removeBuffWhenPickupItemChance:
-      baseAmount: 0
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
     isHide: 0
-    isRevealsHide: 0
-    isBlind: 0
     muteFootstepSound: 0
     selfStatusEffectsWhenAttacking: []
     enemyStatusEffectsWhenAttacking: []
     selfStatusEffectsWhenAttacked: []
     enemyStatusEffectsWhenAttacked: []
-    doNotRemoveOnDead: 0
+    effects: []
     isExtendDuration: 0
     maxStack:
       baseAmount: 0
       amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
-    effects: []
+    doNotRemoveOnDead: 0
   increaseStats:
     baseStats:
       hp: 0
@@ -458,13 +280,7 @@ MonoBehaviour:
       slotLimit: 5
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
+      testStats: 0
     statsIncreaseEachLevel:
       hp: 0
       hpRecovery: 0
@@ -489,14 +305,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
-    statsIncreaseEachLevelByLevels: []
+      testStats: 0
   increaseStatsRate:
     baseStats:
       hp: 0
@@ -522,13 +331,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
+      testStats: 0
     statsIncreaseEachLevel:
       hp: 0
       hpRecovery: 0
@@ -553,14 +356,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
-    statsIncreaseEachLevelByLevels: []
+      testStats: 0
   increaseAttributes: []
   increaseAttributesRate: []
   increaseResistances:
@@ -568,30 +364,16 @@ MonoBehaviour:
     amount:
       baseAmount: 0.1
       amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
   increaseArmors: []
-  increaseArmorsRate: []
   increaseDamages: []
-  increaseDamagesRate: []
-  increaseSkillLevels: []
-  increaseSkills:
+  increaseSkillLevels:
   - skill: {fileID: 11400000, guid: d55d8bfb45f9c574d9120b6ffcd66e3c, type: 2}
-    level:
-      baseAmount: 2
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
+    level: 2
   - skill: {fileID: 11400000, guid: ab5e0f2076634794394a8a28275204c2, type: 2}
-    level:
-      baseAmount: 1
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
+    level: 1
   - skill: {fileID: 11400000, guid: aa319f1dfe3afb449b69aa255c39a69b, type: 2}
-    level:
-      baseAmount: 1
-      amountIncreaseEachLevel: 0
-      amountIncreaseEachLevelByLevels: []
+    level: 1
   ammoType: {fileID: 0}
-  overrideAmmoCapacity: 0
   buildingEntity: {fileID: 0}
   petEntity: {fileID: 0}
   mountEntity: {fileID: 0}
@@ -620,13 +402,7 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
+      testStats: 0
     statsRate:
       hp: 0
       hpRecovery: 0
@@ -651,22 +427,13 @@ MonoBehaviour:
       slotLimit: 0
       goldRate: 0
       expRate: 0
-      itemDropRate: 0
-      jumpHeight: 0
-      headDamageAbsorbs: 0
-      bodyDamageAbsorbs: 0
-      fallDamageAbsorbs: 0
-      gravityRate: 0
-      testStat1: 0
+      testStats: 0
     attributes: []
     attributesRate: []
     resistances: []
     armors: []
-    armorsRate: []
     damages: []
-    damagesRate: []
     skills: []
-    statusEffectResistances: []
   attributeAmount:
     attribute: {fileID: 0}
     amount: 0
@@ -678,183 +445,6 @@ MonoBehaviour:
   selfStatusEffectsWhenAttacked: []
   enemyStatusEffectsWhenAttacked: []
   randomBonus:
-    maxRandomStatsAmount: 0
-    randomCharacterStats:
-      minHp: 0
-      maxHp: 0
-      hpApplyRate: 0
-      minHpRecovery: 0
-      maxHpRecovery: 0
-      hpRecoveryApplyRate: 0
-      minHpLeechRate: 0
-      maxHpLeechRate: 0
-      hpLeechRateApplyRate: 0
-      minMp: 0
-      maxMp: 0
-      mpApplyRate: 0
-      minMpRecovery: 0
-      maxMpRecovery: 0
-      mpRecoveryApplyRate: 0
-      minMpLeechRate: 0
-      maxMpLeechRate: 0
-      mpLeechRateApplyRate: 0
-      minStamina: 0
-      maxStamina: 0
-      staminaApplyRate: 0
-      minStaminaRecovery: 0
-      maxStaminaRecovery: 0
-      staminaRecoveryApplyRate: 0
-      minStaminaLeechRate: 0
-      maxStaminaLeechRate: 0
-      staminaLeechRateApplyRate: 0
-      minFood: 0
-      maxFood: 0
-      foodApplyRate: 0
-      minWater: 0
-      maxWater: 0
-      waterApplyRate: 0
-      minAccuracy: 0
-      maxAccuracy: 0
-      accuracyApplyRate: 0
-      minEvasion: 0
-      maxEvasion: 0
-      evasionApplyRate: 0
-      minCriRate: 0
-      maxCriRate: 0
-      criRateApplyRate: 0
-      minCriDmgRate: 0
-      maxCriDmgRate: 0
-      criDmgRateApplyRate: 0
-      minBlockRate: 0
-      maxBlockRate: 0
-      blockRateApplyRate: 0
-      minBlockDmgRate: 0
-      maxBlockDmgRate: 0
-      blockDmgRateApplyRate: 0
-      minMoveSpeed: 0
-      maxMoveSpeed: 0
-      moveSpeedApplyRate: 0
-      minAtkSpeed: 0
-      maxAtkSpeed: 0
-      atkSpeedApplyRate: 0
-      minWeightLimit: 0
-      maxWeightLimit: 0
-      weightLimitApplyRate: 0
-      minSlotLimit: 0
-      maxSlotLimit: 0
-      slotLimitApplyRate: 0
-      minGoldRate: 0
-      maxGoldRate: 0
-      goldRateApplyRate: 0
-      minExpRate: 0
-      maxExpRate: 0
-      expRateApplyRate: 0
-      minItemDropRate: 0
-      maxItemDropRate: 0
-      itemDropRateApplyRate: 0
-      minJumpHeight: 0
-      maxJumpHeight: 0
-      jumpHeightApplyRate: 0
-      minHeadDamageAbsorbs: 0
-      maxHeadDamageAbsorbs: 0
-      headDamageAbsorbsApplyRate: 0
-      minBodyDamageAbsorbs: 0
-      maxBodyDamageAbsorbs: 0
-      bodyDamageAbsorbsApplyRate: 0
-      minFallDamageAbsorbs: 0
-      maxFallDamageAbsorbs: 0
-      fallDamageAbsorbsApplyRate: 0
-      minGravityRate: 0
-      maxGravityRate: 0
-      gravityRateApplyRate: 0
-    randomCharacterStatsRate:
-      minHp: 0
-      maxHp: 0
-      hpApplyRate: 0
-      minHpRecovery: 0
-      maxHpRecovery: 0
-      hpRecoveryApplyRate: 0
-      minHpLeechRate: 0
-      maxHpLeechRate: 0
-      hpLeechRateApplyRate: 0
-      minMp: 0
-      maxMp: 0
-      mpApplyRate: 0
-      minMpRecovery: 0
-      maxMpRecovery: 0
-      mpRecoveryApplyRate: 0
-      minMpLeechRate: 0
-      maxMpLeechRate: 0
-      mpLeechRateApplyRate: 0
-      minStamina: 0
-      maxStamina: 0
-      staminaApplyRate: 0
-      minStaminaRecovery: 0
-      maxStaminaRecovery: 0
-      staminaRecoveryApplyRate: 0
-      minStaminaLeechRate: 0
-      maxStaminaLeechRate: 0
-      staminaLeechRateApplyRate: 0
-      minFood: 0
-      maxFood: 0
-      foodApplyRate: 0
-      minWater: 0
-      maxWater: 0
-      waterApplyRate: 0
-      minAccuracy: 0
-      maxAccuracy: 0
-      accuracyApplyRate: 0
-      minEvasion: 0
-      maxEvasion: 0
-      evasionApplyRate: 0
-      minCriRate: 0
-      maxCriRate: 0
-      criRateApplyRate: 0
-      minCriDmgRate: 0
-      maxCriDmgRate: 0
-      criDmgRateApplyRate: 0
-      minBlockRate: 0
-      maxBlockRate: 0
-      blockRateApplyRate: 0
-      minBlockDmgRate: 0
-      maxBlockDmgRate: 0
-      blockDmgRateApplyRate: 0
-      minMoveSpeed: 0
-      maxMoveSpeed: 0
-      moveSpeedApplyRate: 0
-      minAtkSpeed: 0
-      maxAtkSpeed: 0
-      atkSpeedApplyRate: 0
-      minWeightLimit: 0
-      maxWeightLimit: 0
-      weightLimitApplyRate: 0
-      minSlotLimit: 0
-      maxSlotLimit: 0
-      slotLimitApplyRate: 0
-      minGoldRate: 0
-      maxGoldRate: 0
-      goldRateApplyRate: 0
-      minExpRate: 0
-      maxExpRate: 0
-      expRateApplyRate: 0
-      minItemDropRate: 0
-      maxItemDropRate: 0
-      itemDropRateApplyRate: 0
-      minJumpHeight: 0
-      maxJumpHeight: 0
-      jumpHeightApplyRate: 0
-      minHeadDamageAbsorbs: 0
-      maxHeadDamageAbsorbs: 0
-      headDamageAbsorbsApplyRate: 0
-      minBodyDamageAbsorbs: 0
-      maxBodyDamageAbsorbs: 0
-      bodyDamageAbsorbsApplyRate: 0
-      minFallDamageAbsorbs: 0
-      maxFallDamageAbsorbs: 0
-      fallDamageAbsorbsApplyRate: 0
-      minGravityRate: 0
-      maxGravityRate: 0
-      gravityRateApplyRate: 0
     randomAttributeAmounts:
     - attribute: {fileID: 11400000, guid: 0e223af20738b88419c22a1a0401a21b, type: 2}
       minAmount: 1
@@ -872,12 +462,9 @@ MonoBehaviour:
       minAmount: 1
       maxAmount: 2
       applyRate: 0.5
-    randomAttributeAmountRates: []
     randomResistanceAmounts: []
     randomArmorAmounts: []
-    randomArmorAmountRates: []
     randomDamageAmounts: []
-    randomDamageAmountRates: []
     randomSkillLevels:
     - skill: {fileID: 11400000, guid: c036ac5144bfb36428bd9b2fa2a5ce2c, type: 2}
       minLevel: 1

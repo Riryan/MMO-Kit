@@ -17,3 +17,4 @@ Core/LiteNetLibManager/LICENSE
 *.txt
 ObsoleteEntityMovements/LICENSE
 /ObsoleteCharacterModels
+/Core/CameraAndInput/Demo

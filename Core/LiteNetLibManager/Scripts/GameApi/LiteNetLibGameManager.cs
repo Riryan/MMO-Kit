@@ -78,6 +78,8 @@ namespace LiteNetLibManager
         protected readonly List<LiteNetLibSyncField> _updatingSyncFields = new List<LiteNetLibSyncField>(1024);
         protected readonly List<LiteNetLibSyncList> _updatingSyncLists = new List<LiteNetLibSyncList>(1024);
         protected readonly List<LiteNetLibBehaviour> _updatingSyncBehaviours = new List<LiteNetLibBehaviour>(128);
+        private float _syncCleanupTimer;
+        private const float SYNC_CLEANUP_INTERVAL = 1f;
 
         protected virtual void Awake()
         {
@@ -94,6 +96,7 @@ namespace LiteNetLibManager
         protected override void OnServerUpdate(LogicUpdater updater)
         {
             UpdateRegisteredSyncElements();
+            CleanupSyncLists(updater.DeltaTime);
             // Send ping from server
             _serverSendPingCountDown -= updater.DeltaTime;
             if (_serverSendPingCountDown <= 0f)
@@ -110,6 +113,7 @@ namespace LiteNetLibManager
         {
             if (!IsServer)
                 UpdateRegisteredSyncElements();
+            CleanupSyncLists(updater.DeltaTime);
             // Send ping from client
             _clientSendPingCountDown -= updater.DeltaTime;
             if (_clientSendPingCountDown <= 0f)
@@ -123,30 +127,67 @@ namespace LiteNetLibManager
         {
             float currentTime = Time.fixedTime;
             int i;
-            Profiler.BeginSample("SyncFields Update");
-            for (i = _updatingSyncFields.Count - 1; i >= 0; --i)
-            {
-                if (_updatingSyncFields[i] == null || _updatingSyncFields[i].NetworkUpdate(currentTime))
-                    _updatingSyncFields.RemoveAt(i);
-            }
-            Profiler.EndSample();
+Profiler.BeginSample("SyncFields Update");
+for (i = _updatingSyncFields.Count - 1; i >= 0; --i)
+{
+    var field = _updatingSyncFields[i];
+    if (field == null || field.NetworkUpdate(currentTime))
+    {
+        _updatingSyncFields[i] = null;
+    }
+}
+Profiler.EndSample();;
 
-            Profiler.BeginSample("SyncLists Update");
-            for (i = _updatingSyncLists.Count - 1; i >= 0; --i)
-            {
-                if (_updatingSyncLists[i] == null || _updatingSyncLists[i].SendOperations())
-                    _updatingSyncLists.RemoveAt(i);
-            }
-            Profiler.EndSample();
+Profiler.BeginSample("SyncLists Update");
+for (i = _updatingSyncLists.Count - 1; i >= 0; --i)
+{
+    var list = _updatingSyncLists[i];
+    if (list == null || list.SendOperations())
+    {
+        _updatingSyncLists[i] = null;
+    }
+}
+Profiler.EndSample();
 
-            Profiler.BeginSample("SyncBehaviours Update");
-            for (i = _updatingSyncBehaviours.Count - 1; i >= 0; --i)
-            {
-                if (_updatingSyncBehaviours[i] == null || _updatingSyncBehaviours[i].NetworkUpdate(currentTime))
-                    _updatingSyncBehaviours.RemoveAt(i);
-            }
-            Profiler.EndSample();
+
+Profiler.BeginSample("SyncBehaviours Update");
+for (i = _updatingSyncBehaviours.Count - 1; i >= 0; --i)
+{
+    var behaviour = _updatingSyncBehaviours[i];
+    if (behaviour == null || behaviour.NetworkUpdate(currentTime))
+    {
+        _updatingSyncBehaviours[i] = null;
+    }
+}
+Profiler.EndSample();
+
         }
+
+        private void CleanupSyncLists(double deltaTime)
+{
+    _syncCleanupTimer += (float)deltaTime;
+    if (_syncCleanupTimer < SYNC_CLEANUP_INTERVAL)
+        return;
+
+    CompactList(_updatingSyncFields);
+    CompactList(_updatingSyncLists);
+    CompactList(_updatingSyncBehaviours);
+
+    _syncCleanupTimer = 0f;
+}
+
+private static void CompactList<T>(List<T> list) where T : class
+{
+    int write = 0;
+    for (int read = 0; read < list.Count; read++)
+    {
+        var item = list[read];
+        if (item != null)
+            list[write++] = item;
+    }
+    if (write < list.Count)
+        list.RemoveRange(write, list.Count - write);
+}
 
         internal void RegisterSyncFieldUpdating(LiteNetLibSyncField element)
         {
@@ -159,7 +200,9 @@ namespace LiteNetLibManager
         {
             if (element == null)
                 return;
-            _updatingSyncFields.Remove(element);
+            int index = _updatingSyncFields.IndexOf(element);
+            if (index >= 0)
+                _updatingSyncFields[index] = null;
         }
 
         internal void RegisterSyncListUpdating(LiteNetLibSyncList element)
@@ -173,7 +216,9 @@ namespace LiteNetLibManager
         {
             if (element == null)
                 return;
-            _updatingSyncLists.Remove(element);
+            int index = _updatingSyncLists.IndexOf(element);
+            if (index >= 0)
+                _updatingSyncLists[index] = null;
         }
 
         internal void RegisterSyncBehaviourUpdating(LiteNetLibBehaviour element)
@@ -187,7 +232,9 @@ namespace LiteNetLibManager
         {
             if (element == null)
                 return;
-            _updatingSyncBehaviours.Remove(element);
+            int index = _updatingSyncBehaviours.IndexOf(element);
+            if (index >= 0)
+                _updatingSyncBehaviours[index] = null;
         }
 
         public virtual uint PacketVersion()

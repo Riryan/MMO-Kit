@@ -146,22 +146,35 @@ namespace MultiplayerARPG.MMO
         public List<CharacterItem> GetStorageItems(StorageId storageId)
         {
 #if (UNITY_EDITOR || UNITY_SERVER) && UNITY_STANDALONE
-            if (!storageItems.ContainsKey(storageId))
-                storageItems.TryAdd(storageId, new List<CharacterItem>());
-            return storageItems[storageId];
+            if (!storageItems.TryGetValue(storageId, out var list))
+            {
+                list = new List<CharacterItem>();
+                storageItems.TryAdd(storageId, list);
+            }
+            return list;
 #else
             return new List<CharacterItem>();
 #endif
         }
 
+
         public void SetStorageItems(StorageId storageId, List<CharacterItem> items)
         {
 #if (UNITY_EDITOR || UNITY_SERVER) && UNITY_STANDALONE
-            if (!storageItems.ContainsKey(storageId))
-                storageItems.TryAdd(storageId, new List<CharacterItem>());
-            storageItems[storageId] = items;
+            if (!storageItems.TryGetValue(storageId, out var existing))
+            {
+                // First time: just store it
+                storageItems.TryAdd(storageId, items ?? new List<CharacterItem>());
+                    return;
+            }
+
+            // Keep list reference stable; replace contents
+            existing.Clear();
+            if (items != null && items.Count > 0)
+                existing.AddRange(items);
 #endif
         }
+
 
         public Storage GetStorage(StorageId storageId, out uint objectId)
         {
