@@ -122,6 +122,9 @@ namespace MultiplayerARPG
         protected bool _isReadyToInstantiatePlayers { get { return _isServerReadyToInstantiatePlayers; } set { _isServerReadyToInstantiatePlayers = value; } }
         protected bool _isServerReadyToInstantiatePlayers;
 
+        private readonly Dictionary<long, PartyData> _updatingPartyMembers = new(128);
+        private readonly Dictionary<long, GuildData> _updatingGuildMembers = new(128);
+
         protected override void Awake()
         {
             Singleton = this;
@@ -597,11 +600,12 @@ namespace MultiplayerARPG
 
         protected virtual void UpdateOnlineCharacters()
         {
-            Dictionary<long, PartyData> updatingPartyMembers = new Dictionary<long, PartyData>();
-            Dictionary<long, GuildData> updatingGuildMembers = new Dictionary<long, GuildData>();
+            _updatingPartyMembers.Clear();
+            _updatingGuildMembers.Clear();
 
             PartyData tempParty;
             GuildData tempGuild;
+
             foreach (BasePlayerCharacterEntity playerCharacter in ServerUserHandlers.GetPlayerCharacters())
             {
                 if (playerCharacter == null)
@@ -609,31 +613,30 @@ namespace MultiplayerARPG
 
                 UpdateOnlineCharacter(playerCharacter);
 
-                if (playerCharacter.PartyId > 0 && ServerPartyHandlers.TryGetParty(playerCharacter.PartyId, out tempParty) && tempParty != null)
+                if (playerCharacter.PartyId > 0 &&
+                    ServerPartyHandlers.TryGetParty(playerCharacter.PartyId, out tempParty) &&
+                    tempParty != null)
                 {
                     tempParty.UpdateMember(playerCharacter);
-                    if (!updatingPartyMembers.ContainsKey(playerCharacter.ConnectionId))
-                        updatingPartyMembers.Add(playerCharacter.ConnectionId, tempParty);
+                    _updatingPartyMembers.TryAdd(playerCharacter.ConnectionId, tempParty);
                 }
 
-                if (playerCharacter.GuildId > 0 && ServerGuildHandlers.TryGetGuild(playerCharacter.GuildId, out tempGuild) && tempGuild != null)
+                if (playerCharacter.GuildId > 0 &&
+                    ServerGuildHandlers.TryGetGuild(playerCharacter.GuildId, out tempGuild) &&
+                    tempGuild != null)
                 {
                     tempGuild.UpdateMember(playerCharacter);
-                    if (!updatingGuildMembers.ContainsKey(playerCharacter.ConnectionId))
-                        updatingGuildMembers.Add(playerCharacter.ConnectionId, tempGuild);
+                    _updatingGuildMembers.TryAdd(playerCharacter.ConnectionId, tempGuild);
                 }
             }
 
-            foreach (long connectionId in updatingPartyMembers.Keys)
-            {
-                ServerGameMessageHandlers.SendUpdatePartyMembersToOne(connectionId, updatingPartyMembers[connectionId]);
-            }
+            foreach (var kvp in _updatingPartyMembers)
+                ServerGameMessageHandlers.SendUpdatePartyMembersToOne(kvp.Key, kvp.Value);
 
-            foreach (long connectionId in updatingGuildMembers.Keys)
-            {
-                ServerGameMessageHandlers.SendUpdateGuildMembersToOne(connectionId, updatingGuildMembers[connectionId]);
-            }
+            foreach (var kvp in _updatingGuildMembers)
+                ServerGameMessageHandlers.SendUpdateGuildMembersToOne(kvp.Key, kvp.Value);
         }
+
 
         protected virtual void HandleWarpAtClient(MessageHandlerData messageHandler)
         {
