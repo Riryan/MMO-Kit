@@ -872,8 +872,8 @@ MonoBehaviour:
   startGold: 0
   startItems: []
   homeScene:
-    sceneAsset: {fileID: 102900000, guid: d529c814bb9fcd14289ac4141b27e951, type: 3}
-    sceneName: 01Home_MMO
+    sceneAsset: {fileID: 102900000, guid: ade6fa5747c04c54b99f067a5ed7f2f1, type: 3}
+    sceneName: 01Home
   homeMobileScene:
     sceneAsset: {fileID: 0}
     sceneName: 

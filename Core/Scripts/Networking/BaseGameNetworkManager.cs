@@ -43,7 +43,7 @@ namespace MultiplayerARPG
         protected IServerInventoryMessageHandlers ServerInventoryMessageHandlers { get; set; }
         protected IServerPartyMessageHandlers ServerPartyMessageHandlers { get; set; }
         protected IServerGuildMessageHandlers ServerGuildMessageHandlers { get; set; }
-        protected IServerGachaMessageHandlers ServerGachaMessageHandlers { get; set; }
+        //protected IServerGachaMessageHandlers ServerGachaMessageHandlers { get; set; }
         protected IServerFriendMessageHandlers ServerFriendMessageHandlers { get; set; }
         protected IServerBankMessageHandlers ServerBankMessageHandlers { get; set; }
         protected IServerOnlineCharacterMessageHandlers ServerOnlineCharacterMessageHandlers { get; set; }
@@ -55,7 +55,7 @@ namespace MultiplayerARPG
         protected IClientInventoryHandlers ClientInventoryHandlers { get; set; }
         protected IClientPartyHandlers ClientPartyHandlers { get; set; }
         protected IClientGuildHandlers ClientGuildHandlers { get; set; }
-        protected IClientGachaHandlers ClientGachaHandlers { get; set; }
+        //protected IClientGachaHandlers ClientGachaHandlers { get; set; }
         protected IClientFriendHandlers ClientFriendHandlers { get; set; }
         protected IClientBankHandlers ClientBankHandlers { get; set; }
         protected IClientOnlineCharacterHandlers ClientOnlineCharacterHandlers { get; set; }
@@ -405,11 +405,11 @@ namespace MultiplayerARPG
                 RegisterRequestToServer<EmptyMessage, ResponseGuildRequestNotificationMessage>(GameNetworkingConsts.GuildRequestNotification, ServerGuildMessageHandlers.HandleRequestGuildRequestNotification);
             }
             // Gacha
-            if (ServerGachaMessageHandlers != null)
-            {
-                RegisterRequestToServer<EmptyMessage, ResponseGachaInfoMessage>(GameNetworkingConsts.GachaInfo, ServerGachaMessageHandlers.HandleRequestGachaInfo);
-                RegisterRequestToServer<RequestOpenGachaMessage, ResponseOpenGachaMessage>(GameNetworkingConsts.OpenGacha, ServerGachaMessageHandlers.HandleRequestOpenGacha);
-            }
+            //if (ServerGachaMessageHandlers != null)
+            //{
+            //    RegisterRequestToServer<EmptyMessage, ResponseGachaInfoMessage>(GameNetworkingConsts.GachaInfo, ServerGachaMessageHandlers.HandleRequestGachaInfo);
+            //    RegisterRequestToServer<RequestOpenGachaMessage, ResponseOpenGachaMessage>(GameNetworkingConsts.OpenGacha, ServerGachaMessageHandlers.HandleRequestOpenGacha);
+            //}
             // Friend
             if (ServerFriendMessageHandlers != null)
             {
@@ -542,7 +542,7 @@ namespace MultiplayerARPG
             GameInstance.ClientInventoryHandlers = ClientInventoryHandlers;
             GameInstance.ClientPartyHandlers = ClientPartyHandlers;
             GameInstance.ClientGuildHandlers = ClientGuildHandlers;
-            GameInstance.ClientGachaHandlers = ClientGachaHandlers;
+            //GameInstance.ClientGachaHandlers = ClientGachaHandlers;
             GameInstance.ClientFriendHandlers = ClientFriendHandlers;
             GameInstance.ClientBankHandlers = ClientBankHandlers;
             GameInstance.ClientOnlineCharacterHandlers = ClientOnlineCharacterHandlers;
