@@ -59,7 +59,8 @@ namespace MultiplayerARPG
             int weightLimit = storage.weightLimit;
             int slotLimit = storage.slotLimit;
             // Prepare storage items
-            List<CharacterItem> storageItems = new List<CharacterItem>(GetStorageItems(storageId));
+            //List<CharacterItem> storageItems = new List<CharacterItem>(GetStorageItems(storageId));
+            List<CharacterItem> storageItems = GetStorageItems(storageId);
             List<CharacterItem> droppingItems = new List<CharacterItem>();
             for (int i = 0; i < convertItems.Count; ++i)
             {

@@ -19,7 +19,7 @@ namespace MultiplayerARPG
         public const float UPDATE_TIME_OF_DAY_DURATION = 5f;
         public const string INSTANTIATES_OBJECTS_DELAY_STATE_KEY = "INSTANTIATES_OBJECTS_DELAY";
         public const float INSTANTIATES_OBJECTS_DELAY = 0.5f;
-
+        private bool _entityListDirty;
         protected static readonly NetDataWriter s_Writer = new NetDataWriter();
 
         public static BaseGameNetworkManager Singleton { get; protected set; }
@@ -168,7 +168,8 @@ namespace MultiplayerARPG
         }
 
         protected override void Update()
-        {
+        {   if (_entityListDirty)
+                RebuildEntityArrayIfNeeded();
             // Network messages will be handled before update game entities (in base.Update())
             base.Update();
             float tempDeltaTime = Time.unscaledDeltaTime;
@@ -252,7 +253,24 @@ namespace MultiplayerARPG
             }
             Profiler.EndSample();
         }
+public void RegisterGameEntity(BaseGameEntity gameEntity)
+{
+    if (_setOfGameEntity.Add(gameEntity))
+    {
+        // Player entities MUST be available immediately for movement
+        if (gameEntity is BasePlayerCharacterEntity)
+        {
+            RebuildEntityArrayImmediate();
+        }
+        else
+        {
+            _entityListDirty = true;
+        }
+    }
+}
 
+
+/*
         public void RegisterGameEntity(BaseGameEntity gameEntity)
         {
             _setOfGameEntity.Add(gameEntity);
@@ -260,15 +278,44 @@ namespace MultiplayerARPG
             if (_setOfGameEntity.Count > _arrayGameEntity.Length)
                 System.Array.Resize(ref _arrayGameEntity, _setOfGameEntity.Count);
             _setOfGameEntity.CopyTo(_arrayGameEntity, 0, _arrayGameEntityLength);
-        }
+        }*/
+public void UnregisterGameEntity(BaseGameEntity gameEntity)
+{
+    if (_setOfGameEntity.Remove(gameEntity))
+        _entityListDirty = true;
+}
 
+
+/*
         public void UnregisterGameEntity(BaseGameEntity gameEntity)
         {
             _setOfGameEntity.Remove(gameEntity);
             _arrayGameEntityLength = _setOfGameEntity.Count;
             _setOfGameEntity.CopyTo(_arrayGameEntity, 0, _arrayGameEntityLength);
-        }
+        }*/
+        private void RebuildEntityArrayIfNeeded()
+        {
+            if (!_entityListDirty)
+                return;
 
+            _arrayGameEntityLength = _setOfGameEntity.Count;
+
+            if (_arrayGameEntityLength > _arrayGameEntity.Length)
+                System.Array.Resize(ref _arrayGameEntity, _arrayGameEntityLength);
+
+            _setOfGameEntity.CopyTo(_arrayGameEntity, 0);
+            _entityListDirty = false;
+        }
+        private void RebuildEntityArrayImmediate()
+        {
+            _arrayGameEntityLength = _setOfGameEntity.Count;
+
+            if (_arrayGameEntityLength > _arrayGameEntity.Length)
+                System.Array.Resize(ref _arrayGameEntity, _arrayGameEntityLength);
+
+            _setOfGameEntity.CopyTo(_arrayGameEntity, 0);
+            _entityListDirty = false;
+        }
         protected override void RegisterMessages()
         {
             base.RegisterMessages();
