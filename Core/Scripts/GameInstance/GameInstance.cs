@@ -51,15 +51,15 @@ namespace MultiplayerARPG
 
     [DefaultExecutionOrder(DefaultExecutionOrders.GAME_INSTANCE)]
     [RequireComponent(typeof(EventSystemManager))]
-#if ENABLE_PURCHASING && (UNITY_IOS || UNITY_ANDROID)
-    public partial class GameInstance : MonoBehaviour, IStoreListener
-#else
+//#if ENABLE_PURCHASING && (UNITY_IOS || UNITY_ANDROID)
+//    public partial class GameInstance : MonoBehaviour, IStoreListener
+//#else
     public partial class GameInstance : MonoBehaviour
-#endif
+//#endif
     {
         public static readonly string LogTag = nameof(GameInstance);
         public static GameInstance Singleton { get; protected set; }
-        public static IClientCashShopHandlers ClientCashShopHandlers { get; set; }
+        //public static IClientCashShopHandlers ClientCashShopHandlers { get; set; }
         public static IClientMailHandlers ClientMailHandlers { get; set; }
         public static IClientCharacterHandlers ClientCharacterHandlers { get; set; }
         public static IClientInventoryHandlers ClientInventoryHandlers { get; set; }
@@ -828,8 +828,8 @@ namespace MultiplayerARPG
             if (npcDatabase != null && npcDatabase.maps != null)
                 AddMapNpcs(npcDatabase.maps);
 
-            if (Application.isPlaying)
-                InitializePurchasing();
+            //if (Application.isPlaying)
+            //    InitializePurchasing();
 
             OnGameDataLoaded();
 

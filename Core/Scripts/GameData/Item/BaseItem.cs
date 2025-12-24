@@ -49,9 +49,9 @@ namespace MultiplayerARPG
         protected bool restrictSelling;
 
 
-        [Category(100, "Cash Shop Generating Settings")]
-        [SerializeField]
-        protected CashShopItemGeneratingData[] cashShopItemGeneratingList = new CashShopItemGeneratingData[0];
+        //[Category(100, "Cash Shop Generating Settings")]
+        //[SerializeField]
+        //protected CashShopItemGeneratingData[] cashShopItemGeneratingList = new CashShopItemGeneratingData[0];
 
         public override string Title
         {
@@ -144,7 +144,7 @@ namespace MultiplayerARPG
             GameInstance.AddItems(DismantleReturnItems);
             GameInstance.AddCurrencies(DismantleReturnCurrencies);
         }
-
+/*
         public void GenerateCashShopItems()
         {
             if (cashShopItemGeneratingList == null || cashShopItemGeneratingList.Length == 0)
@@ -160,6 +160,6 @@ namespace MultiplayerARPG
                 cashShopItem.GenerateByItem(this, generatingData);
                 GameInstance.CashShopItems[cashShopItem.DataId] = cashShopItem;
             }
-        }
+        }*/
     }
 }

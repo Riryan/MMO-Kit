@@ -36,7 +36,7 @@ namespace MultiplayerARPG
         protected IServerChatHandlers ServerChatHandlers { get; set; }
         protected IServerLogHandlers ServerLogHandlers { get; set; }
         // Server Message Handlers
-        protected IServerCashShopMessageHandlers ServerCashShopMessageHandlers { get; set; }
+        //protected IServerCashShopMessageHandlers ServerCashShopMessageHandlers { get; set; }
         protected IServerMailMessageHandlers ServerMailMessageHandlers { get; set; }
         protected IServerStorageMessageHandlers ServerStorageMessageHandlers { get; set; }
         protected IServerCharacterMessageHandlers ServerCharacterMessageHandlers { get; set; }
@@ -48,7 +48,7 @@ namespace MultiplayerARPG
         protected IServerBankMessageHandlers ServerBankMessageHandlers { get; set; }
         protected IServerOnlineCharacterMessageHandlers ServerOnlineCharacterMessageHandlers { get; set; }
         // Client handlers
-        protected IClientCashShopHandlers ClientCashShopHandlers { get; set; }
+        //protected IClientCashShopHandlers ClientCashShopHandlers { get; set; }
         protected IClientMailHandlers ClientMailHandlers { get; set; }
         protected IClientStorageHandlers ClientStorageHandlers { get; set; }
         protected IClientCharacterHandlers ClientCharacterHandlers { get; set; }
@@ -306,13 +306,14 @@ namespace MultiplayerARPG
             }
             // Request to server (response to client)
             // Cash shop
+            /*
             if (ServerCashShopMessageHandlers != null)
             {
                 RegisterRequestToServer<EmptyMessage, ResponseCashShopInfoMessage>(GameNetworkingConsts.CashShopInfo, ServerCashShopMessageHandlers.HandleRequestCashShopInfo);
                 RegisterRequestToServer<EmptyMessage, ResponseCashPackageInfoMessage>(GameNetworkingConsts.CashPackageInfo, ServerCashShopMessageHandlers.HandleRequestCashPackageInfo);
                 RegisterRequestToServer<RequestCashShopBuyMessage, ResponseCashShopBuyMessage>(GameNetworkingConsts.CashShopBuy, ServerCashShopMessageHandlers.HandleRequestCashShopBuy);
                 RegisterRequestToServer<RequestCashPackageBuyValidationMessage, ResponseCashPackageBuyValidationMessage>(GameNetworkingConsts.CashPackageBuyValidation, ServerCashShopMessageHandlers.HandleRequestCashPackageBuyValidation);
-            }
+            }*/
             // Mail
             if (ServerMailMessageHandlers != null)
             {
@@ -535,7 +536,7 @@ namespace MultiplayerARPG
             {
                 component.OnStartClient(this, client);
             }
-            GameInstance.ClientCashShopHandlers = ClientCashShopHandlers;
+            //GameInstance.ClientCashShopHandlers = ClientCashShopHandlers;
             GameInstance.ClientMailHandlers = ClientMailHandlers;
             GameInstance.ClientStorageHandlers = ClientStorageHandlers;
             GameInstance.ClientCharacterHandlers = ClientCharacterHandlers;
