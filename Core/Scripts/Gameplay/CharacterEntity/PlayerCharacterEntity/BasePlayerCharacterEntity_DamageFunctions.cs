@@ -44,12 +44,13 @@ namespace MultiplayerARPG
             bool attackerIsPlayer = attackPlayer != null;
 
             // Find punishment type
-            if (Dueling.DuelingStarted)
-            {
-                deadPunishmentType = DeadPunishmentType.Duel;
-                Dueling.EndDueling(this);
-            }
-            else if (CurrentMapInfo.EnablePkRules && attackerIsPlayer)
+            //if (Dueling.DuelingStarted)
+            //{
+            //    deadPunishmentType = DeadPunishmentType.Duel;
+             //   Dueling.EndDueling(this);
+            //}
+            //else 
+            if (CurrentMapInfo.EnablePkRules && attackerIsPlayer)
             {
                 deadPunishmentType = DeadPunishmentType.PK;
             }

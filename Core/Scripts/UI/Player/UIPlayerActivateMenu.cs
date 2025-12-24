@@ -55,11 +55,11 @@ namespace MultiplayerARPG
             Hide();
         }
 
-        public void OnClickSendDuelingRequest()
-        {
-            GameInstance.PlayingCharacterEntity.Dueling.CallCmdSendDuelingRequest(Data.ObjectId);
-            Hide();
-        }
+        //public void OnClickSendDuelingRequest()
+        //{
+        //    GameInstance.PlayingCharacterEntity.Dueling.CallCmdSendDuelingRequest(Data.ObjectId);
+        //    Hide();
+        //}
 
         public void OnClickSendPartyInvitation()
         {

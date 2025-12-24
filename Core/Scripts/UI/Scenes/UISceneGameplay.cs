@@ -65,10 +65,10 @@ namespace MultiplayerARPG
         public UIStartVending uiStartVending;
         [Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
         public UIVending uiVending;
-        [Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
-        public UIDuelingRequest uiDuelingRequest;
-        [Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
-        public UIDueling uiDueling;
+        //[Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
+        //public UIDuelingRequest uiDuelingRequest;
+        //[Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
+        //public UIDueling uiDueling;
         [Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
         public UIPartyInvitation uiPartyInvitation;
         [Tooltip("If this UI was not set, it will find component in children to set when `Awake`")]
@@ -178,10 +178,10 @@ namespace MultiplayerARPG
                 uiStartVending = gameObject.GetComponentInChildren<UIStartVending>(true);
             if (uiVending == null)
                 uiVending = gameObject.GetComponentInChildren<UIVending>(true);
-            if (uiDuelingRequest == null)
-                uiDuelingRequest = gameObject.GetComponentInChildren<UIDuelingRequest>(true);
-            if (uiDueling == null)
-                uiDueling = gameObject.GetComponentInChildren<UIDueling>(true);
+            //if (uiDuelingRequest == null)
+            //    uiDuelingRequest = gameObject.GetComponentInChildren<UIDuelingRequest>(true);
+            //if (uiDueling == null)
+            //    uiDueling = gameObject.GetComponentInChildren<UIDueling>(true);
             if (uiPartyInvitation == null)
                 uiPartyInvitation = gameObject.GetComponentInChildren<UIPartyInvitation>(true);
             if (uiGuildInvitation == null)
@@ -490,23 +490,23 @@ namespace MultiplayerARPG
             uiDealing.Show();
         }
 
-        public void OnShowDuelingRequest(BasePlayerCharacterEntity playerCharacter)
-        {
-            if (uiDuelingRequest == null)
-                return;
-            uiDuelingRequest.Data = playerCharacter;
-            uiDuelingRequest.Show();
-        }
+        //public void OnShowDuelingRequest(BasePlayerCharacterEntity playerCharacter)
+        //{
+        //    if (uiDuelingRequest == null)
+        //        return;
+        //    uiDuelingRequest.Data = playerCharacter;
+        //    uiDuelingRequest.Show();
+        //}
 
-        public void OnShowDueling(BasePlayerCharacterEntity playerCharacter, float countDowm, float duration)
-        {
-            if (uiDueling == null)
-                return;
-            uiDueling.Data = playerCharacter;
-            uiDueling.CountDown = countDowm;
-            uiDueling.DuelingTime = duration;
-            uiDueling.Show();
-        }
+        //public void OnShowDueling(BasePlayerCharacterEntity playerCharacter, float countDowm, float duration)
+        //{
+        //    if (uiDueling == null)
+        //        return;
+        //    uiDueling.Data = playerCharacter;
+        //    uiDueling.CountDown = countDowm;
+        //    uiDueling.DuelingTime = duration;
+        //    uiDueling.Show();
+        //}
 
         public void OnNotifyPartyInvitation(PartyInvitationData invitation)
         {
@@ -845,8 +845,8 @@ namespace MultiplayerARPG
             playerCharacter.NpcAction.onShowNpcRepairItem += OnShowNpcRepairItem;
             playerCharacter.Dealing.onRequestDealing += OnShowDealingRequest;
             playerCharacter.Dealing.onStartDealing += OnShowDealing;
-            playerCharacter.Dueling.onRequestDueling += OnShowDuelingRequest;
-            playerCharacter.Dueling.onStartDueling += OnShowDueling;
+            //playerCharacter.Dueling.onRequestDueling += OnShowDuelingRequest;
+           // playerCharacter.Dueling.onStartDueling += OnShowDueling;
             playerCharacter.onIsWarpingChange += OnIsWarpingChange;
             playerCharacter.onDead.AddListener(OnCharacterDead);
             playerCharacter.onRespawn.AddListener(OnCharacterRespawn);
@@ -863,8 +863,8 @@ namespace MultiplayerARPG
             playerCharacter.NpcAction.onShowNpcRepairItem -= OnShowNpcRepairItem;
             playerCharacter.Dealing.onRequestDealing -= OnShowDealingRequest;
             playerCharacter.Dealing.onStartDealing -= OnShowDealing;
-            playerCharacter.Dueling.onRequestDueling -= OnShowDuelingRequest;
-            playerCharacter.Dueling.onStartDueling -= OnShowDueling;
+            //playerCharacter.Dueling.onRequestDueling -= OnShowDuelingRequest;
+            //playerCharacter.Dueling.onStartDueling -= OnShowDueling;
             playerCharacter.onIsWarpingChange -= OnIsWarpingChange;
             playerCharacter.onDead.RemoveListener(OnCharacterDead);
             playerCharacter.onRespawn.RemoveListener(OnCharacterRespawn);

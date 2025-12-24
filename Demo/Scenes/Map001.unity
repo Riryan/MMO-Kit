@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -154,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -269,6 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -494,6 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -552,6 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -609,6 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -1041,6 +1046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -1098,6 +1104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -1492,6 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -1549,6 +1557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -1606,6 +1615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -1664,6 +1674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -1886,6 +1897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -2010,6 +2022,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -2068,6 +2081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -2169,7 +2183,8 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.5905e-41, y: 0, z: 0, w: 1.8887701e+31}
+  m_BoundingSphereOverride: {x: 1.7086692e+19, y: 1.1021797e+24, z: 3.9308005e+30,
+    w: 5.8565454e+22}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -2285,6 +2300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
@@ -2342,6 +2358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 0, b: 1, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 20
   squareSizeX: 0
@@ -2400,6 +2417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 0, g: 0.7490196, b: 0.64705884, a: 1}
+  gizmosHeight: 16
   type: 0
   randomRadius: 10
   squareSizeX: 0
@@ -2455,6 +2473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmosColor: {r: 1, g: 1, b: 0, a: 1}
+  gizmosHeight: 16
   type: 1
   randomRadius: 100
   squareSizeX: 200
