@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1650234716345238, guid: d2c274d504629844ba9d4993edf72817, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4009622383931608, guid: d2c274d504629844ba9d4993edf72817, type: 3}
       propertyPath: m_RootOrder
@@ -536,7 +536,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: -2.1073424e+34}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: -7.026915e+30}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -612,15 +612,6 @@ MonoBehaviour:
   onSpawnEntitiesFinish:
     m_PersistentCalls:
       m_Calls: []
-  guildWarMessageTypes:
-    statusMsgType: 1001
-    getClientConfigRequestType: 1400
-  recoverMonstersWhenRoundEnd: 1
-  guildWarMailSenderId: GUILDWAR
-  guildWarMailSenderName: Guild War Manager
-  guildWarServiceUrl: http://localhost:9801
-  guildWarServiceUrlForClient: http://localhost:9801
-  guildWarSecretKey: secret
   clusterServerAddress: 127.0.0.1
   clusterServerPort: 6010
   machineAddress: 127.0.0.1
@@ -1001,10 +992,6 @@ MonoBehaviour:
   disableDealing: 0
   vendingItemsLimit: 16
   disableVending: 0
-  duelingRequestDuration: 5
-  duelingCountDownDuration: 3
-  duelingDuration: 180
-  disableDueling: 0
   pickUpItemDistance: 2
   dropDistance: 1
   conversationDistance: 3
@@ -1086,7 +1073,6 @@ MonoBehaviour:
   exportSocialSystemSettingAsJson: 0
   exportMinimalItemsAsJson: 0
   exportCharacterCreationDataAsJson: 0
-  cashShopDatabase: {fileID: 11400000, guid: 677c37c598e6c1045b66de68f1f546f6, type: 2}
 --- !u!4 &1379718503
 Transform:
   m_ObjectHideFlags: 0

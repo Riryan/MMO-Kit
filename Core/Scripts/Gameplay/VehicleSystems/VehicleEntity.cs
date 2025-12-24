@@ -88,9 +88,22 @@ namespace MultiplayerARPG
         protected override void EntityAwake()
         {
             base.EntityAwake();
+            //gameObject.tag = CurrentGameInstance.vehicleTag;
+           // gameObject.layer = CurrentGameInstance.vehicleLayer;
+            _isDestroyed = false;
+        }
+        protected override void EntityStart()
+        {
+            base.EntityStart();
+
+            if (CurrentGameInstance == null)
+            {
+                Debug.LogError($"{name}: CurrentGameInstance is NULL in VehicleEntity.EntityStart()");
+                return;
+            }
+
             gameObject.tag = CurrentGameInstance.vehicleTag;
             gameObject.layer = CurrentGameInstance.vehicleLayer;
-            _isDestroyed = false;
         }
 
         protected virtual void InitStats()

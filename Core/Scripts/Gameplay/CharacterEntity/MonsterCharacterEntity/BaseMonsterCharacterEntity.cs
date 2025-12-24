@@ -488,69 +488,127 @@ namespace MultiplayerARPG
             if (shareGuildExpRate > 0)
                 GameInstance.ServerGuildHandlers.IncreaseGuildExp(playerCharacterEntity, Mathf.CeilToInt(reward.exp * shareGuildExpRate * rewardRate));
         }
+private static readonly List<BasePlayerCharacterEntity> _sharingExpMembers = new(8);
+private static readonly List<BasePlayerCharacterEntity> _sharingItemMembers = new(8);
 
-        protected virtual void GivingRewardToParty(BasePlayerCharacterEntity playerCharacterEntity, bool isLastAttacker, Reward reward, float rewardRate, float shareGuildExpRate, bool makeMostDamage, out bool givenRewardExp, out bool givenRewardGold, out bool givenRewardCurrencies)
+protected virtual void GivingRewardToParty(
+    BasePlayerCharacterEntity playerCharacterEntity,
+    bool isLastAttacker,
+    Reward reward,
+    float rewardRate,
+    float shareGuildExpRate,
+    bool makeMostDamage,
+    out bool givenRewardExp,
+    out bool givenRewardGold,
+    out bool givenRewardCurrencies)
+{
+    givenRewardExp = false;
+    givenRewardGold = false;
+    givenRewardCurrencies = false;
+
+    if (!GameInstance.ServerPartyHandlers.TryGetParty(playerCharacterEntity.PartyId, out PartyData tempPartyData) || tempPartyData == null)
+        return;
+
+    // ✅ reuse buffers
+    _sharingExpMembers.Clear();
+    _sharingItemMembers.Clear();
+
+    BasePlayerCharacterEntity nearby;
+
+    foreach (string memberId in tempPartyData.GetMemberIds())
+    {
+        if (!GameInstance.ServerUserHandlers.TryGetPlayerCharacterById(memberId, out nearby) ||
+            nearby == null || nearby.IsDead())
+            continue;
+
+        if (tempPartyData.shareExp && ShouldShareExp(playerCharacterEntity, nearby))
+            _sharingExpMembers.Add(nearby);
+
+        if (tempPartyData.shareItem && ShouldShareItem(playerCharacterEntity, nearby))
+            _sharingItemMembers.Add(nearby);
+
+        if (isLastAttacker && playerCharacterEntity.ObjectId != nearby.ObjectId)
+            nearby.OnKillMonster(this);
+    }
+
+    float count;
+
+    // ---- EXP ----
+    count = _sharingExpMembers.Count;
+    if (count > 0 &&
+        CurrentGameInstance.monsterExpRewardingMode == RewardingMode.Immediately &&
+        !reward.NoExp())
+    {
+        for (int i = 0; i < _sharingExpMembers.Count; ++i)
         {
-            givenRewardExp = false;
-            givenRewardGold = false;
-            givenRewardCurrencies = false;
-            if (!GameInstance.ServerPartyHandlers.TryGetParty(playerCharacterEntity.PartyId, out PartyData tempPartyData) || tempPartyData == null) return;
+            nearby = _sharingExpMembers[i];
+            int petIndex = nearby.IndexOfSummon(SummonType.PetItem);
 
-            List<BasePlayerCharacterEntity> sharingExpMembers = new List<BasePlayerCharacterEntity>();
-            List<BasePlayerCharacterEntity> sharingItemMembers = new List<BasePlayerCharacterEntity>();
-            BasePlayerCharacterEntity nearby;
-
-            foreach (string memberId in tempPartyData.GetMemberIds())
+            if (petIndex >= 0)
             {
-                if (!GameInstance.ServerUserHandlers.TryGetPlayerCharacterById(memberId, out nearby) || nearby == null || nearby.IsDead()) continue;
-                if (tempPartyData.shareExp && ShouldShareExp(playerCharacterEntity, nearby)) sharingExpMembers.Add(nearby);
-                if (tempPartyData.shareItem && ShouldShareItem(playerCharacterEntity, nearby)) sharingItemMembers.Add(nearby);
-                if (isLastAttacker && playerCharacterEntity.ObjectId != nearby.ObjectId) nearby.OnKillMonster(this);
-            }
+                BaseMonsterCharacterEntity pet = nearby.Summons[petIndex].CacheEntity;
+                if (pet != null)
+                    pet.RewardExp(
+                        reward.exp,
+                        (1f - shareGuildExpRate) / count * 0.5f * rewardRate,
+                        RewardGivenType.PartyShare,
+                        playerCharacterEntity.Level,
+                        Level);
 
-            float count;
-            count = sharingExpMembers.Count;
-            if (CurrentGameInstance.monsterExpRewardingMode == RewardingMode.Immediately && !reward.NoExp())
+                int xpPlayer = Mathf.CeilToInt(
+                    reward.exp * (1f - shareGuildExpRate) / count * 0.5f * rewardRate);
+
+                _XpEnqueue(nearby, xpPlayer, RewardGivenType.PartyShare, playerCharacterEntity.Level, Level);
+            }
+            else
             {
-                for (int i = 0; i < sharingExpMembers.Count; ++i)
-                {
-                    nearby = sharingExpMembers[i];
-                    int petIndex = nearby.IndexOfSummon(SummonType.PetItem);
-                    if (petIndex >= 0)
-                    {
-                        BaseMonsterCharacterEntity pet = nearby.Summons[petIndex].CacheEntity;
-                        if (pet != null)
-                            pet.RewardExp(reward.exp, (1f - shareGuildExpRate) / count * 0.5f * rewardRate, RewardGivenType.PartyShare, playerCharacterEntity.Level, Level);
+                int xp = Mathf.CeilToInt(
+                    reward.exp * (1f - shareGuildExpRate) / count * rewardRate);
 
-                        int xpPlayer = Mathf.CeilToInt(reward.exp * (1f - shareGuildExpRate) / count * 0.5f * rewardRate);
-                        _XpEnqueue(nearby, xpPlayer, RewardGivenType.PartyShare, playerCharacterEntity.Level, Level);
-                    }
-                    else
-                    {
-                        int xp = Mathf.CeilToInt(reward.exp * (1f - shareGuildExpRate) / count * rewardRate);
-                        var kind = (playerCharacterEntity.ObjectId == nearby.ObjectId) ? RewardGivenType.KillMonster : RewardGivenType.PartyShare;
-                        _XpEnqueue(nearby, xp, kind, playerCharacterEntity.Level, Level);
-                    }
-                }
+                var kind = (playerCharacterEntity.ObjectId == nearby.ObjectId)
+                    ? RewardGivenType.KillMonster
+                    : RewardGivenType.PartyShare;
+
+                _XpEnqueue(nearby, xp, kind, playerCharacterEntity.Level, Level);
             }
-
-            count = sharingItemMembers.Count;
-            if ((CurrentGameInstance.monsterGoldRewardingMode == RewardingMode.Immediately && !reward.NoGold()) || (CurrentGameInstance.monsterCurrencyRewardingMode == RewardingMode.Immediately && reward.NoCurrencies()))
-            {
-                for (int i = 0; i < sharingItemMembers.Count; ++i)
-                {
-                    nearby = sharingItemMembers[i];
-                    if (makeMostDamage) _looters.Add(nearby.Id);
-                    float mul = 1f / count * rewardRate;
-                    var kind = playerCharacterEntity.ObjectId == nearby.ObjectId ? RewardGivenType.KillMonster : RewardGivenType.PartyShare;
-                    if (CurrentGameInstance.monsterGoldRewardingMode == RewardingMode.Immediately) nearby.RewardGold(reward.gold, mul, kind, Level, Level);
-                    if (CurrentGameInstance.monsterCurrencyRewardingMode == RewardingMode.Immediately) nearby.RewardCurrencies(reward.currencies, mul, kind, Level, Level);
-                }
-            }
-
-            if (tempPartyData.shareExp) givenRewardExp = true;
-            if (tempPartyData.shareItem) { givenRewardGold = true; givenRewardCurrencies = true; }
         }
+    }
+
+    // ---- ITEMS / GOLD / CURRENCY ----
+    count = _sharingItemMembers.Count;
+    if (count > 0 &&
+        ((CurrentGameInstance.monsterGoldRewardingMode == RewardingMode.Immediately && !reward.NoGold()) ||
+         (CurrentGameInstance.monsterCurrencyRewardingMode == RewardingMode.Immediately && reward.NoCurrencies())))
+    {
+        for (int i = 0; i < _sharingItemMembers.Count; ++i)
+        {
+            nearby = _sharingItemMembers[i];
+
+            if (makeMostDamage)
+                _looters.Add(nearby.Id);
+
+            float mul = 1f / count * rewardRate;
+            var kind = playerCharacterEntity.ObjectId == nearby.ObjectId
+                ? RewardGivenType.KillMonster
+                : RewardGivenType.PartyShare;
+
+            if (CurrentGameInstance.monsterGoldRewardingMode == RewardingMode.Immediately)
+                nearby.RewardGold(reward.gold, mul, kind, Level, Level);
+
+            if (CurrentGameInstance.monsterCurrencyRewardingMode == RewardingMode.Immediately)
+                nearby.RewardCurrencies(reward.currencies, mul, kind, Level, Level);
+        }
+    }
+
+    if (tempPartyData.shareExp)
+        givenRewardExp = true;
+
+    if (tempPartyData.shareItem)
+    {
+        givenRewardGold = true;
+        givenRewardCurrencies = true;
+    }
+}
 
         private bool ShouldShareExp(BasePlayerCharacterEntity attacker, BasePlayerCharacterEntity member)
         {

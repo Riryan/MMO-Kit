@@ -89,10 +89,23 @@ namespace LiteNetLibManager
             }
         }
 
-        public override void SendMessage(long connectionId, byte dataChannel, DeliveryMethod deliveryMethod, NetDataWriter writer)
-        {
-            Transport.ServerSend(connectionId, dataChannel, deliveryMethod, writer);
-        }
+public override void SendMessage(
+    long connectionId,
+    byte dataChannel,
+    DeliveryMethod deliveryMethod,
+    NetDataWriter writer)
+{
+#if UNITY_SERVER || UNITY_EDITOR
+    // Count FINAL server send (real bandwidth point)
+    if (SimulatedClientManager.Instance != null)
+    {
+        SimulatedClientManager.Instance.CountFinalSend(writer.Length);
+    }
+#endif
+
+    Transport.ServerSend(connectionId, dataChannel, deliveryMethod, writer);
+}
+
 
         public void SendPacket(long connectionId, byte dataChannel, DeliveryMethod deliveryMethod, ushort msgType, SerializerDelegate serializer)
         {

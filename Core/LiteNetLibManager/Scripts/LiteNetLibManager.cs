@@ -343,6 +343,17 @@ namespace LiteNetLibManager
 
         public void ServerSendPacket(long connectionId, byte dataChannel, DeliveryMethod deliveryMethod, ushort msgType, SerializerDelegate serializer)
         {
+#if UNITY_SERVER || UNITY_EDITOR
+            // Simulated connections: count + skip real transport
+            if (SimulatedClientManager.IsSimulatedId(connectionId))
+            {
+                // We still want serialization cost to be real.
+                // So build the packet into a writer and count bytes.
+                // We need a writer; simplest is to have SimulatedClientManager provide one.
+                SimulatedClientManager.Instance?.SimulateServerSend(dataChannel, deliveryMethod, msgType, serializer);
+                return;
+            }
+#endif
             Server.SendPacket(connectionId, dataChannel, deliveryMethod, msgType, serializer);
         }
 
@@ -418,10 +429,23 @@ namespace LiteNetLibManager
             Server.SendMessageToAllConnections(dataChannel, deliveryMethod, writer);
         }
 
+        //public void ServerSendPacketToAllConnections(byte dataChannel, DeliveryMethod deliveryMethod, ushort msgType, SerializerDelegate serializer)
+        //{
+        //    Server.SendPacketToAllConnections(dataChannel, deliveryMethod, msgType, serializer);
+        //}
         public void ServerSendPacketToAllConnections(byte dataChannel, DeliveryMethod deliveryMethod, ushort msgType, SerializerDelegate serializer)
         {
+#if UNITY_SERVER || UNITY_EDITOR
+            if (SimulatedClientManager.Instance != null && SimulatedClientManager.Instance.HasSimulatedClients)
+            {
+                SimulatedClientManager.Instance.SimulateServerBroadcast(dataChannel, deliveryMethod, msgType, serializer);
+                // Note: we still want real connections to receive packets too
+                // so DO NOT return here.
+            }
+#endif
             Server.SendPacketToAllConnections(dataChannel, deliveryMethod, msgType, serializer);
         }
+
 
         public void ServerSendPacketToAllConnections<T>(byte dataChannel, DeliveryMethod deliveryMethod, ushort msgType, T messageData, SerializerDelegate extraSerializer = null) where T : INetSerializable
         {

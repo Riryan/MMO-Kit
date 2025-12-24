@@ -212,30 +212,43 @@ namespace MultiplayerARPG
 
         protected virtual void LateUpdate()
         {
-            if (IsNetworkActive)
+            if (!IsNetworkActive)
+                return;
+
+            for (int i = 0; i < _arrayGameEntityLength; ++i)
             {
-                for (int i = 0; i < _arrayGameEntityLength; ++i)
-                {
-                    if (!_arrayGameEntity[i].enabled)
-                        continue;
-                    _arrayGameEntity[i].DoLateUpdate();
-                }
+                BaseGameEntity entity = _arrayGameEntity[i];
+
+                // CRITICAL: handle destroyed objects
+                if (!entity || !entity.enabled)
+                    continue;
+
+                entity.DoLateUpdate();
             }
         }
 
-        protected override void OnServerUpdate(LogicUpdater updater)
-        {
-            base.OnServerUpdate(updater);
-            Profiler.BeginSample("BaseGameNetworkManager - SendServerState");
-            long timestamp = Timestamp;
-            for (int i = 0; i < _arrayGameEntityLength; ++i)
-            {
-                if (!_arrayGameEntity[i].enabled)
-                    continue;
-                _arrayGameEntity[i].SendServerState(timestamp);
-            }
-            Profiler.EndSample();
-        }
+
+protected override void OnServerUpdate(LogicUpdater updater)
+{
+    base.OnServerUpdate(updater);
+
+    Profiler.BeginSample("BaseGameNetworkManager - SendServerState");
+    long timestamp = Timestamp;
+
+    for (int i = 0; i < _arrayGameEntityLength; ++i)
+    {
+        BaseGameEntity entity = _arrayGameEntity[i];
+
+        // CRITICAL: destroyed MonoBehaviour safety
+        if (!entity || !entity.enabled)
+            continue;
+
+        entity.SendServerState(timestamp);
+    }
+
+    Profiler.EndSample();
+}
+
 
         protected override void OnClientUpdate(LogicUpdater updater)
         {

@@ -103,8 +103,9 @@ namespace MultiplayerARPG
         protected override void EntityAwake()
         {
             base.EntityAwake();
-            gameObject.tag = CurrentGameInstance.npcTag;
-            gameObject.layer = CurrentGameInstance.npcLayer;
+            //Moved to start to ensure GameInstance is ready
+            //gameObject.tag = CurrentGameInstance.npcTag;
+            //gameObject.layer = CurrentGameInstance.npcLayer;
         }
 
         protected override void EntityStart()
@@ -114,6 +115,8 @@ namespace MultiplayerARPG
                 GameInstance.AddNpcDialogs(startDialog);
             if (graph != null)
                 GameInstance.AddNpcDialogs(graph.GetDialogs());
+            gameObject.tag = CurrentGameInstance.npcTag;
+            gameObject.layer = CurrentGameInstance.npcLayer;
         }
 
         public override void OnSetup()
