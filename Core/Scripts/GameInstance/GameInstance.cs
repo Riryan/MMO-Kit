@@ -210,8 +210,7 @@ namespace MultiplayerARPG
         public NpcQuestIndicator npcQuestIndicator = null;
 
         [Header("Gameplay Effects")]
-        [SerializeField]
-        private GameEffect levelUpEffect = null;
+       // [SerializeField] private GameEffect levelUpEffect = null;
         [SerializeField]
         private GameEffect[] stunEffects = new GameEffect[0];
         [SerializeField]
@@ -543,10 +542,10 @@ namespace MultiplayerARPG
             }
         }
 
-        public GameEffect LevelUpEffect
-        {
-            get { return levelUpEffect; }
-        }
+       // public GameEffect LevelUpEffect
+       // {
+       //     get { return levelUpEffect; }
+       // }
 
         public GameEffect[] StunEffects
         {
@@ -810,7 +809,7 @@ namespace MultiplayerARPG
                 DefaultWeaponItem as BaseItem,
                 MonsterWeaponItem as BaseItem
             });
-            AddPoolingObjects(LevelUpEffect);
+            //AddPoolingObjects(LevelUpEffect);
             AddPoolingObjects(StunEffects);
             AddPoolingObjects(MuteEffects);
             AddPoolingObjects(FreezeEffects);
