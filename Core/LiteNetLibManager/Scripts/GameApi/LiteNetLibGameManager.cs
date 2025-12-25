@@ -998,25 +998,37 @@ private static void CompactList<T>(List<T> list) where T : class
             HandleServerSceneChange(message.serverSceneName);
         }
 
-        protected void HandleServerSceneChange(string serverSceneName)
-        {
-            // Scene loaded at server, if this is host (client and server) then skip it.
-            if (IsServer)
-                return;
+protected void HandleServerSceneChange(string serverSceneName)
+{
+    if (IsServer)
+        return;
 
-            if (string.IsNullOrEmpty(serverSceneName) || serverSceneName.Equals(SceneManager.GetActiveScene().name))
-            {
-                Assets.Initialize();
-                Assets.InitPoolingObjects();
-                OnClientOnlineSceneLoaded();
-                SendClientReady();
-            }
-            else
-            {
-                // If scene is difference, load changing scene
-                LoadSceneRoutine(serverSceneName, true).Forget();
-            }
-        }
+    if (string.IsNullOrEmpty(serverSceneName))
+        return;
+
+    Scene existingScene = SceneManager.GetSceneByName(serverSceneName);
+
+    // Scene already exists (preloaded or loaded)
+    if (existingScene.IsValid())
+    {
+        Debug.Log($"[LiteNetLibGameManager] Scene exists, activating if possible: {serverSceneName}");
+
+        if (existingScene.isLoaded)
+            SceneManager.SetActiveScene(existingScene);
+
+        Assets.Initialize();
+        Assets.InitPoolingObjects();
+        OnClientOnlineSceneLoaded();
+        SendClientReady();
+        return;
+    }
+
+    // Scene not present at all → normal load
+    Debug.Log($"[LiteNetLibGameManager] Scene not present, loading normally: {serverSceneName}");
+    LoadSceneRoutine(serverSceneName, true).Forget();
+}
+
+
 
         protected virtual void HandleServerSetObjectOwner(MessageHandlerData messageHandler)
         {

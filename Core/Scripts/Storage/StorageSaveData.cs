@@ -9,14 +9,31 @@ namespace MultiplayerARPG
     {
         public List<StorageCharacterItem> storageItems = new List<StorageCharacterItem>();
 
+        // =========================
+        // MAIN THREAD CACHED PATH
+        // =========================
+        private static string _persistentPath;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitPersistentPath()
+        {
+            _persistentPath = Application.persistentDataPath;
+        }
+
         private static string GetNewPath(string id)
         {
-            return Application.persistentDataPath + "/" + id + "_storage.ssd";
+            if (string.IsNullOrEmpty(_persistentPath))
+                throw new System.InvalidOperationException("StorageSaveData persistent path not initialized");
+
+            return _persistentPath + "/" + id + "_storage.ssd";
         }
 
         private static string GetLegacyPath(string id)
         {
-            return Application.persistentDataPath + "/" + id + "_storage.sav";
+            if (string.IsNullOrEmpty(_persistentPath))
+                throw new System.InvalidOperationException("StorageSaveData persistent path not initialized");
+
+            return _persistentPath + "/" + id + "_storage.sav";
         }
 
         // =========================

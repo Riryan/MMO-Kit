@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MultiplayerARPG
 {
-    public class MeleeDamageInfo : BaseCustomDamageInfo
+    public partial class MeleeDamageInfo : BaseCustomDamageInfo
     {
         [Tooltip("If this is TRUE, it will hit only selected target, if no selected target it will hit 1 random target")]
         public bool hitOnlySelectedTarget;

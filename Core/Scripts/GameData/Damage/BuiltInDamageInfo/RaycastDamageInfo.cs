@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MultiplayerARPG
 {
-    public class RaycastDamageInfo : BaseCustomDamageInfo
+    public partial class RaycastDamageInfo : BaseCustomDamageInfo
     {
         public float missileDistance;
         public float missileSpeed;

@@ -9,14 +9,31 @@ namespace MultiplayerARPG
     {
         public List<CharacterBuff> summonBuffs = new List<CharacterBuff>();
 
+        // =========================
+        // MAIN THREAD CACHED PATH
+        // =========================
+        private static string _persistentPath;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitPersistentPath()
+        {
+            _persistentPath = Application.persistentDataPath;
+        }
+
         private static string GetNewPath(string id)
         {
-            return Application.persistentDataPath + "/" + id + "_summon_buffs.sbsd";
+            if (string.IsNullOrEmpty(_persistentPath))
+                throw new System.InvalidOperationException("SummonBuffsSaveData persistent path not initialized");
+
+            return _persistentPath + "/" + id + "_summon_buffs.sbsd";
         }
 
         private static string GetLegacyPath(string id)
         {
-            return Application.persistentDataPath + "/" + id + "_summon_buffs.sav";
+            if (string.IsNullOrEmpty(_persistentPath))
+                throw new System.InvalidOperationException("SummonBuffsSaveData persistent path not initialized");
+
+            return _persistentPath + "/" + id + "_summon_buffs.sav";
         }
 
         // =========================

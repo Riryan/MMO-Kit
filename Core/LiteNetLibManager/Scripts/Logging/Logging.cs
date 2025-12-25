@@ -12,19 +12,19 @@ namespace LiteNetLibManager
 
         public static void Log(string tag, string message, params object[] args)
         {
-            if (string.IsNullOrEmpty(message))
-                return;
-            if (LogManager.IsLoggerDisposed)
-            {
-                #if UNITY_EDITOR
-                if (args.Length > 0)
-                    Debug.Log(string.Format($"[{tag}] {message}", args));
-                else
-                    Debug.Log($"[{tag}] {message}");
-                return;
-                #endif
-            }
-            LogManager.GetLogger(tag).LogInformation(message, args);
+           //// if (string.IsNullOrEmpty(message))
+           //     return;
+          //  if (LogManager.IsLoggerDisposed)
+           // {
+           //     #if UNITY_EDITOR
+           //     if (args.Length > 0)
+           //         Debug.Log(string.Format($"[{tag}] {message}", args));
+           //     else
+           //         Debug.Log($"[{tag}] {message}");
+           //     return;
+           //     #endif
+           // }
+           // LogManager.GetLogger(tag).LogInformation(message, args);
         }
 
         public static void LogError(string tag, object message)

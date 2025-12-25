@@ -9,36 +9,52 @@ namespace MultiplayerARPG
     {
         public List<BuildingSaveData> buildings = new List<BuildingSaveData>();
 
+        // =========================
+        // MAIN THREAD INITIALIZED
+        // =========================
+        private static string _persistentPath;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitPersistentPath()
+        {
+            _persistentPath = Application.persistentDataPath;
+        }
+
         private static string GetNewPath(string id, string map)
         {
-            return Application.persistentDataPath + "/" + id + "_world_" + map + ".wsd";
+            if (string.IsNullOrEmpty(_persistentPath))
+                throw new System.InvalidOperationException("WorldSaveData persistent path not initialized");
+
+            return _persistentPath + "/" + id + "_world_" + map + ".wsd";
         }
 
         private static string GetLegacyPath(string id, string map)
         {
-            return Application.persistentDataPath + "/" + id + "_world_" + map + ".sav";
+            if (string.IsNullOrEmpty(_persistentPath))
+                throw new System.InvalidOperationException("WorldSaveData persistent path not initialized");
+
+            return _persistentPath + "/" + id + "_world_" + map + ".sav";
         }
 
         // =========================
-        // SAVE (NEW FORMAT ONLY)
+        // SAVE
         // =========================
         public void SavePersistentData(string id, string map)
         {
             string path = GetNewPath(id, map);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-            using (FileStream stream = File.Open(path, FileMode.Create))
+            using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
                 writer.Write(buildings.Count);
                 for (int i = 0; i < buildings.Count; ++i)
-                {
                     buildings[i].Write(writer);
-                }
             }
         }
 
         // =========================
-        // LOAD (NEW → LEGACY)
+        // LOAD
         // =========================
         public void LoadPersistentData(string id, string map)
         {
@@ -51,21 +67,15 @@ namespace MultiplayerARPG
                 return;
             }
 
-            // ---- legacy fallback ----
             string legacyPath = GetLegacyPath(id, map);
             if (File.Exists(legacyPath))
             {
                 LoadLegacyBinaryFormatter(legacyPath);
-
-                // migrate immediately
                 SavePersistentData(id, map);
                 File.Delete(legacyPath);
             }
         }
 
-        // =========================
-        // NEW FORMAT LOADER
-        // =========================
         private void LoadNew(string path)
         {
             using (FileStream stream = File.OpenRead(path))
@@ -83,9 +93,6 @@ namespace MultiplayerARPG
             }
         }
 
-        // =========================
-        // LEGACY LOADER (ONE TIME)
-        // =========================
         private void LoadLegacyBinaryFormatter(string path)
         {
 #pragma warning disable SYSLIB0011
@@ -96,9 +103,7 @@ namespace MultiplayerARPG
 
                 buildings.Clear();
                 if (data.buildings != null && data.buildings.Count > 0)
-                {
                     buildings.AddRange(data.buildings);
-                }
             }
 #pragma warning restore SYSLIB0011
         }

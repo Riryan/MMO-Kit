@@ -20,18 +20,16 @@ namespace MultiplayerARPG
         private bool warpImmediatelyWhenEnter;
 
         [SerializeField]
+        [Tooltip("When enabled, prevents double-warp / double scene-load issues when using scene preloading")]
+        private bool allowPreloadSafeWarp = true;
+
+        [SerializeField]
         [FormerlySerializedAs("type")]
         private WarpPortalType warpPortalType;
         public WarpPortalType WarpPortalType
         {
-            get
-            {
-                return warpPortalType;
-            }
-            set
-            {
-                warpPortalType = value;
-            }
+            get { return warpPortalType; }
+            set { warpPortalType = value; }
         }
 
         [SerializeField]
@@ -40,14 +38,8 @@ namespace MultiplayerARPG
         private BaseMapInfo warpToMapInfo;
         public BaseMapInfo WarpToMapInfo
         {
-            get
-            {
-                return warpToMapInfo;
-            }
-            set
-            {
-                warpToMapInfo = value;
-            }
+            get { return warpToMapInfo; }
+            set { warpToMapInfo = value; }
         }
 
         [SerializeField]
@@ -56,14 +48,8 @@ namespace MultiplayerARPG
         private Vector3 warpToPosition;
         public Vector3 WarpToPosition
         {
-            get
-            {
-                return warpToPosition;
-            }
-            set
-            {
-                warpToPosition = value;
-            }
+            get { return warpToPosition; }
+            set { warpToPosition = value; }
         }
 
         [SerializeField]
@@ -71,14 +57,8 @@ namespace MultiplayerARPG
         private bool warpOverrideRotation;
         public bool WarpOverrideRotation
         {
-            get
-            {
-                return warpOverrideRotation;
-            }
-            set
-            {
-                warpOverrideRotation = value;
-            }
+            get { return warpOverrideRotation; }
+            set { warpOverrideRotation = value; }
         }
 
         [SerializeField]
@@ -86,32 +66,24 @@ namespace MultiplayerARPG
         private Vector3 warpToRotation;
         public Vector3 WarpToRotation
         {
-            get
-            {
-                return warpToRotation;
-            }
-            set
-            {
-                warpToRotation = value;
-            }
+            get { return warpToRotation; }
+            set { warpToRotation = value; }
         }
 
         [SerializeField]
         private WarpPointByCondition[] warpPointsByCondition = new WarpPointByCondition[0];
         public WarpPointByCondition[] WarpPointsByCondition
         {
-            get
-            {
-                return warpPointsByCondition;
-            }
-            set
-            {
-                warpPointsByCondition = value;
-            }
+            get { return warpPointsByCondition; }
+            set { warpPointsByCondition = value; }
         }
 
         [System.NonSerialized]
         private Dictionary<int, List<WarpPointByCondition>> _cacheWarpPointsByCondition;
+
+        [System.NonSerialized]
+        private bool _warpInProgress;
+
         public Dictionary<int, List<WarpPointByCondition>> CacheWarpPointsByCondition
         {
             get
@@ -125,8 +97,10 @@ namespace MultiplayerARPG
                         factionDataId = 0;
                         if (warpPointByCondition.forFaction != null)
                             factionDataId = warpPointByCondition.forFaction.DataId;
+
                         if (!_cacheWarpPointsByCondition.ContainsKey(factionDataId))
                             _cacheWarpPointsByCondition.Add(factionDataId, new List<WarpPointByCondition>());
+
                         _cacheWarpPointsByCondition[factionDataId].Add(warpPointByCondition);
                     }
                 }
@@ -142,6 +116,12 @@ namespace MultiplayerARPG
                 if (warpSignal != null)
                     warpSignal.SetActive(false);
             }
+        }
+
+        private void OnDisable()
+        {
+            // Safe reset when scene unloads / object disabled during transition
+            _warpInProgress = false;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -166,7 +146,6 @@ namespace MultiplayerARPG
 
         private void TriggerEnter(GameObject other)
         {
-            // Improve performance by tags
             if (!other.CompareTag(GameInstance.Singleton.playerTag))
                 return;
 
@@ -177,22 +156,19 @@ namespace MultiplayerARPG
             if (warpImmediatelyWhenEnter && IsServer)
                 EnterWarp(playerCharacterEntity);
 
-            if (!warpImmediatelyWhenEnter)
+            if (!warpImmediatelyWhenEnter &&
+                playerCharacterEntity == GameInstance.PlayingCharacterEntity)
             {
-                if (playerCharacterEntity == GameInstance.PlayingCharacterEntity)
+                foreach (GameObject warpSignal in warpSignals)
                 {
-                    foreach (GameObject warpSignal in warpSignals)
-                    {
-                        if (warpSignal != null)
-                            warpSignal.SetActive(true);
-                    }
+                    if (warpSignal != null)
+                        warpSignal.SetActive(true);
                 }
             }
         }
 
         private void TriggerExit(GameObject other)
         {
-            // Improve performance by tags
             if (!other.CompareTag(GameInstance.Singleton.playerTag))
                 return;
 
@@ -212,7 +188,18 @@ namespace MultiplayerARPG
 
         public virtual void EnterWarp(BasePlayerCharacterEntity playerCharacterEntity)
         {
-            if (playerCharacterEntity.IsDead())
+            // SERVER ONLY
+            if (!IsServer)
+                return;
+
+            // Preload-safe lock (optional via inspector)
+            if (allowPreloadSafeWarp && _warpInProgress)
+                return;
+
+            if (allowPreloadSafeWarp)
+                _warpInProgress = true;
+
+            if (playerCharacterEntity == null || playerCharacterEntity.IsDead())
                 return;
 
             WarpPortalType portalType = warpPortalType;
@@ -233,33 +220,27 @@ namespace MultiplayerARPG
                 rotation = warpPoint.warpToRotation;
             }
 
-            CurrentGameManager.WarpCharacter(portalType, playerCharacterEntity, mapName, position, overrideRotation, rotation);
+            CurrentGameManager.WarpCharacter(
+                portalType,
+                playerCharacterEntity,
+                mapName,
+                position,
+                overrideRotation,
+                rotation
+            );
         }
 
         public virtual float GetActivatableDistance()
         {
-            return GameInstance.Singleton.conversationDistance;
+            return activatableDistance > 0f
+                ? activatableDistance
+                : GameInstance.Singleton.conversationDistance;
         }
 
-        public virtual bool ShouldClearTargetAfterActivated()
-        {
-            return true;
-        }
-
-        public virtual bool ShouldBeAttackTarget()
-        {
-            return false;
-        }
-
-        public virtual bool ShouldNotActivateAfterFollowed()
-        {
-            return false;
-        }
-
-        public virtual bool CanActivate()
-        {
-            return true;
-        }
+        public virtual bool ShouldClearTargetAfterActivated() => true;
+        public virtual bool ShouldBeAttackTarget() => false;
+        public virtual bool ShouldNotActivateAfterFollowed() => false;
+        public virtual bool CanActivate() => true;
 
         public virtual void OnActivate()
         {

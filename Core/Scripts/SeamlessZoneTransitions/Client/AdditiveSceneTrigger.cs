@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(BoxCollider))]
 public class AdditiveSceneTrigger : MonoBehaviour
 {
 #if UNITY_EDITOR
