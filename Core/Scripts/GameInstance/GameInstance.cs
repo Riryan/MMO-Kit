@@ -5,9 +5,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
-//#if ENABLE_PURCHASING && (UNITY_IOS || UNITY_ANDROID)
-//using UnityEngine.Purchasing;
-//#endif
 
 namespace MultiplayerARPG
 {
@@ -51,22 +48,16 @@ namespace MultiplayerARPG
 
     [DefaultExecutionOrder(DefaultExecutionOrders.GAME_INSTANCE)]
     [RequireComponent(typeof(EventSystemManager))]
-//#if ENABLE_PURCHASING && (UNITY_IOS || UNITY_ANDROID)
-//    public partial class GameInstance : MonoBehaviour, IStoreListener
-//#else
     public partial class GameInstance : MonoBehaviour
-//#endif
     {
         public static readonly string LogTag = nameof(GameInstance);
         public static GameInstance Singleton { get; protected set; }
-        //public static IClientCashShopHandlers ClientCashShopHandlers { get; set; }
         public static IClientMailHandlers ClientMailHandlers { get; set; }
         public static IClientCharacterHandlers ClientCharacterHandlers { get; set; }
         public static IClientInventoryHandlers ClientInventoryHandlers { get; set; }
         public static IClientStorageHandlers ClientStorageHandlers { get; set; }
         public static IClientPartyHandlers ClientPartyHandlers { get; set; }
         public static IClientGuildHandlers ClientGuildHandlers { get; set; }
-        //public static IClientGachaHandlers ClientGachaHandlers { get; set; }
         public static IClientFriendHandlers ClientFriendHandlers { get; set; }
         public static IClientBankHandlers ClientBankHandlers { get; set; }
         public static IClientOnlineCharacterHandlers ClientOnlineCharacterHandlers { get; set; }
@@ -127,7 +118,6 @@ namespace MultiplayerARPG
         public static readonly Dictionary<int, PlayerTitle> PlayerTitles = new Dictionary<int, PlayerTitle>();
         public static readonly Dictionary<int, GuildSkill> GuildSkills = new Dictionary<int, GuildSkill>();
         public static readonly Dictionary<int, GuildIcon> GuildIcons = new Dictionary<int, GuildIcon>();
-        //public static readonly Dictionary<int, Gacha> Gachas = new Dictionary<int, Gacha>();
         public static readonly Dictionary<int, StatusEffect> StatusEffects = new Dictionary<int, StatusEffect>();
         public static readonly Dictionary<int, DamageElement> DamageElements = new Dictionary<int, DamageElement>();
         public static readonly Dictionary<int, EquipmentSet> EquipmentSets = new Dictionary<int, EquipmentSet>();
@@ -210,7 +200,6 @@ namespace MultiplayerARPG
         public NpcQuestIndicator npcQuestIndicator = null;
 
         [Header("Gameplay Effects")]
-       // [SerializeField] private GameEffect levelUpEffect = null;
         [SerializeField]
         private GameEffect[] stunEffects = new GameEffect[0];
         [SerializeField]
@@ -305,14 +294,6 @@ namespace MultiplayerARPG
         public int vendingItemsLimit = 16;
         [Tooltip("If this is `TRUE`, vending feature will be disabled, all players won't be able to deal items to each other")]
         public bool disableVending = false;
-        //[Tooltip("If dueling request does not accepted within this duration, the request will be cancelled")]
-        //public float duelingRequestDuration = 5f;
-        //[Tooltip("Count down duration before start a dueling")]
-        //public float duelingCountDownDuration = 3f;
-        //[Tooltip("Dueling duration (in seconds)")]
-        //public float duelingDuration = 60f * 3f;
-        //[Tooltip("If this is `TRUE`, dueling feature will be disabled, all players won't be able to deal items to each other")]
-        //public bool disableDueling = false;
         [Tooltip("This is a distance that allows a player to pick up an item")]
         public float pickUpItemDistance = 1f;
         [Tooltip("This is a distance that random drop item around a player")]
@@ -542,11 +523,6 @@ namespace MultiplayerARPG
             }
         }
 
-       // public GameEffect LevelUpEffect
-       // {
-       //     get { return levelUpEffect; }
-       // }
-
         public GameEffect[] StunEffects
         {
             get { return stunEffects; }
@@ -747,7 +723,6 @@ namespace MultiplayerARPG
             PlayerTitles.Clear();
             GuildSkills.Clear();
             GuildIcons.Clear();
-            //Gachas.Clear();
             StatusEffects.Clear();
             DamageElements.Clear();
             EquipmentSets.Clear();
@@ -809,7 +784,6 @@ namespace MultiplayerARPG
                 DefaultWeaponItem as BaseItem,
                 MonsterWeaponItem as BaseItem
             });
-            //AddPoolingObjects(LevelUpEffect);
             AddPoolingObjects(StunEffects);
             AddPoolingObjects(MuteEffects);
             AddPoolingObjects(FreezeEffects);
@@ -826,9 +800,6 @@ namespace MultiplayerARPG
 
             if (npcDatabase != null && npcDatabase.maps != null)
                 AddMapNpcs(npcDatabase.maps);
-
-            //if (Application.isPlaying)
-            //    InitializePurchasing();
 
             OnGameDataLoaded();
 
@@ -1387,15 +1358,6 @@ namespace MultiplayerARPG
             AddManyGameData(GuildIcons, guildIcons);
         }
 
-        //public static void AddGachas(params Gacha[] gachas)
-        //{
-//            AddGachas((IEnumerable<Gacha>)gachas);
-        //}
-
-        //public static void AddGachas(IEnumerable<Gacha> gachas)
-        //{
-        //    AddManyGameData(Gachas, gachas);
-        //}
 
         public static void AddStatusEffects(params StatusEffectApplying[] statusEffects)
         {

@@ -24,7 +24,10 @@ namespace MultiplayerARPG
 
         protected float _applyDuration;
         protected float _lastAppliedTime;
-        protected readonly Dictionary<uint, BaseCharacterEntity> _receivingBuffCharacters = new Dictionary<uint, BaseCharacterEntity>();
+        protected readonly Dictionary<uint, BaseCharacterEntity> _receivingBuffCharacters =
+            new Dictionary<uint, BaseCharacterEntity>();
+
+        private bool _serverDestroyed;
 
         protected override void Awake()
         {
@@ -35,17 +38,10 @@ namespace MultiplayerARPG
 
         protected virtual void OnDestroy()
         {
-            Identity.onGetInstance.RemoveListener(OnGetInstance);
+            if (Identity != null)
+                Identity.onGetInstance.RemoveListener(OnGetInstance);
         }
 
-        /// <summary>
-        /// Setup this component data
-        /// </summary>
-        /// <param name="buffApplier"></param>
-        /// <param name="skill">Skill which was used to attack enemy</param>
-        /// <param name="skillLevel">Level of the skill</param>
-        /// <param name="areaDuration"></param>
-        /// <param name="applyDuration"></param>
         public virtual void Setup(
             EntityInfo buffApplier,
             BaseSkill skill,
@@ -55,31 +51,58 @@ namespace MultiplayerARPG
             float applyDuration)
         {
             base.Setup(buffApplier, skill, skillLevel, applyBuffToEveryone);
-            PushBack(areaDuration);
-            this._applyDuration = applyDuration;
+
+            _applyDuration = Mathf.Max(0.01f, applyDuration);
             _lastAppliedTime = Time.unscaledTime;
+            _serverDestroyed = false;
+
+            // PoolDescriptor lifetime (kept for compatibility)
+            PushBack(areaDuration);
+
+            // HARD server-side lifetime guard (prevents leaks)
+            if (IsServer)
+                Invoke(nameof(ServerForceDestroy), areaDuration + 0.1f);
         }
 
         protected virtual void Update()
         {
-            if (Time.unscaledTime - _lastAppliedTime >= _applyDuration)
-            {
-                _lastAppliedTime = Time.unscaledTime;
-                foreach (BaseCharacterEntity entity in _receivingBuffCharacters.Values)
-                {
-                    if (entity == null)
-                        continue;
+            // Server-only logic
+            if (!IsServer || _serverDestroyed)
+                return;
 
+            if (Time.unscaledTime - _lastAppliedTime < _applyDuration)
+                return;
+
+            _lastAppliedTime = Time.unscaledTime;
+
+            foreach (BaseCharacterEntity entity in _receivingBuffCharacters.Values)
+            {
+                if (entity != null)
                     ApplyBuffTo(entity);
-                }
             }
+        }
+
+        private void ServerForceDestroy()
+        {
+            if (!IsServer || _serverDestroyed)
+                return;
+
+            _serverDestroyed = true;
+            Cleanup();
+            Identity.NetworkDestroy();
         }
 
         protected override void OnPushBack()
         {
-            _receivingBuffCharacters.Clear();
+            Cleanup();
             if (onDestroy != null)
                 onDestroy.Invoke();
+        }
+
+        private void Cleanup()
+        {
+            _receivingBuffCharacters.Clear();
+            CancelInvoke(nameof(ServerForceDestroy));
         }
 
         protected virtual void OnTriggerEnter(Collider other)
@@ -94,6 +117,9 @@ namespace MultiplayerARPG
 
         protected virtual void TriggerEnter(GameObject other)
         {
+            if (!IsServer)
+                return;
+
             BaseCharacterEntity target = other.GetComponent<BaseCharacterEntity>();
             if (target == null)
                 return;
@@ -101,7 +127,7 @@ namespace MultiplayerARPG
             if (_receivingBuffCharacters.ContainsKey(target.ObjectId))
                 return;
 
-            _receivingBuffCharacters.Add(target.ObjectId, target);
+            _receivingBuffCharacters[target.ObjectId] = target;
         }
 
         protected virtual void OnTriggerExit(Collider other)
@@ -116,11 +142,11 @@ namespace MultiplayerARPG
 
         protected virtual void TriggerExit(GameObject other)
         {
-            BaseCharacterEntity target = other.GetComponent<BaseCharacterEntity>();
-            if (target == null)
+            if (!IsServer)
                 return;
 
-            if (!_receivingBuffCharacters.ContainsKey(target.ObjectId))
+            BaseCharacterEntity target = other.GetComponent<BaseCharacterEntity>();
+            if (target == null)
                 return;
 
             _receivingBuffCharacters.Remove(target.ObjectId);
@@ -130,17 +156,20 @@ namespace MultiplayerARPG
         {
             if (this == null)
             {
-                Debug.LogWarning("The Base Bufff Entity is null, this should not happens");
+                Debug.LogWarning("AreaBuffEntity is null");
                 return;
             }
+
             FxCollection.InitPrefab();
+
             if (Identity == null)
             {
-                Debug.LogWarning($"No `LiteNetLibIdentity` attached with the same game object with `AreaBuffEntity` (prefab name: {name}), it will add new identity component with asset ID which geneared by prefab name.");
-                LiteNetLibIdentity identity = gameObject.AddComponent<LiteNetLibIdentity>();
-                FieldInfo prop = typeof(LiteNetLibIdentity).GetField("assetId", BindingFlags.NonPublic | BindingFlags.Instance);
-                prop.SetValue(identity, $"AreaBuffEntity_{name}");
+                LiteNetLibIdentity id = gameObject.AddComponent<LiteNetLibIdentity>();
+                FieldInfo prop = typeof(LiteNetLibIdentity)
+                    .GetField("assetId", BindingFlags.NonPublic | BindingFlags.Instance);
+                prop.SetValue(id, $"AreaBuffEntity_{name}");
             }
+
             Identity.PoolingSize = PoolSize;
         }
 

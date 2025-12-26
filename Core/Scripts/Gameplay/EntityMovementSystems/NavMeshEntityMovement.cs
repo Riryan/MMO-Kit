@@ -65,6 +65,9 @@ namespace MultiplayerARPG
 
         // Client confirm codes
         protected bool _isClientConfirmingTeleport;
+        // Cached objects (GC / perf fix)
+        private NavMeshPath _cachedPath;
+        private bool _wasStationary;
 
         public override void EntityAwake()
         {
@@ -85,6 +88,7 @@ namespace MultiplayerARPG
             }
             // Setup
             _yAngle = _targetYAngle = CacheTransform.eulerAngles.y;
+            _cachedPath = new NavMeshPath();
             _lookRotationApplied = true;
             StopMoveFunction();
         }
@@ -235,14 +239,20 @@ namespace MultiplayerARPG
 
         public override void EntityUpdate()
         {
+#if UNITY_EDITOR
             Profiler.BeginSample("NavMeshEntityMovement - Update");
+#endif
             CacheNavMeshAgent.speed = Entity.GetMoveSpeed();
             float deltaTime = Time.deltaTime;
-            bool isStationary = !CacheNavMeshAgent.isOnNavMesh || CacheNavMeshAgent.isStopped || GetPathRemainingDistance() <= CacheNavMeshAgent.stoppingDistance;
+            //bool isStationary = !CacheNavMeshAgent.isOnNavMesh || CacheNavMeshAgent.isStopped || GetPathRemainingDistance() <= CacheNavMeshAgent.stoppingDistance;
+            bool isStationary = !CacheNavMeshAgent.isOnNavMesh || CacheNavMeshAgent.isStopped || CacheNavMeshAgent.remainingDistance <= CacheNavMeshAgent.stoppingDistance;
             if (CanPredictMovement())
             {
-                CacheNavMeshAgent.obstacleAvoidanceType = isStationary ? obstacleAvoidanceWhileStationary : obstacleAvoidanceWhileMoving;
-
+if (_wasStationary != isStationary)
+{
+    CacheNavMeshAgent.obstacleAvoidanceType = isStationary ? obstacleAvoidanceWhileStationary : obstacleAvoidanceWhileMoving;
+    _wasStationary = isStationary;
+}
                 if (_inputDirection.HasValue)
                 {
                     // Moving by WASD keys
@@ -299,7 +309,9 @@ namespace MultiplayerARPG
             UpdateRotation();
             _lookRotationApplied = true;
             _currentInput = Entity.SetInputRotation(_currentInput, CacheTransform.rotation);
+#if UNITY_EDITOR
             Profiler.EndSample();
+#endif
         }
 
         private void UpdateRotation()
@@ -318,10 +330,8 @@ namespace MultiplayerARPG
             if (CacheNavMeshAgent.isOnNavMesh)
             {
                 CacheNavMeshAgent.isStopped = false;
-
-                NavMeshPath path = new NavMeshPath();
-                NavMesh.CalculatePath(transform.position, position, CacheNavMeshAgent.areaMask, path);
-                CacheNavMeshAgent.SetPath(path);
+                NavMesh.CalculatePath(transform.position, position, CacheNavMeshAgent.areaMask, _cachedPath);
+                CacheNavMeshAgent.SetPath(_cachedPath);
             }
         }
 

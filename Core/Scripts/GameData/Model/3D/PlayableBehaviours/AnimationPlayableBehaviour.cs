@@ -819,6 +819,12 @@ namespace MultiplayerARPG.GameData.Model.Playables
         {
             if (!_readyToPlay)
                 return;
+if (!_baseStateUpdateData.HasChanges &&
+    !_leftHandWieldingStateUpdateData.HasChanges &&
+    _playingActionState == PlayingActionState.None)
+{
+    return;
+}
 
             if (!Mathf.Approximately(_moveAnimationSpeedMultiplier, CharacterModel.MoveAnimationSpeedMultiplier))
             {
@@ -874,13 +880,13 @@ namespace MultiplayerARPG.GameData.Model.Playables
             _actionPlayElapsed += info.deltaTime;
 
             // Stopped
-            if (weight <= 0f)
-            {
-                _playingActionState = PlayingActionState.None;
-                if (ActionLayerMixer.IsValid())
-                    ActionLayerMixer.Destroy();
-                return;
-            }
+if (weight <= 0f)
+{
+    _playingActionState = PlayingActionState.None;
+    LayerMixer.SetInputWeight(ACTION_LAYER, 0f);
+    return;
+}
+
 
             // Animation end, transition to idle
             if (_actionPlayElapsed >= _actionClipLength && _playingActionState == PlayingActionState.Playing)

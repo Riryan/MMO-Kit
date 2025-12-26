@@ -11,35 +11,23 @@ namespace MultiplayerARPG
 
         [Header("Configuration")]
         public LayerMask hitLayers;
-        [Tooltip("if you don't set it, you better don't change destroy delay.")]
         [FormerlySerializedAs("ProjectileObject")]
         public GameObject projectileObject;
-        [Space]
-        public bool hasGravity = false;
-        [Tooltip("If customGravity is zero, its going to use physics.gravity")]
+        public bool hasGravity;
         public Vector3 customGravity;
-        [Space]
-        [Tooltip("Angle of shoot.")]
-        public bool useAngle = false;
+
+        [Header("Angle / Speed")]
+        public bool useAngle;
         [Range(0, 89)]
         public float angle;
-        [Space]
-        [Tooltip("Calculate the speed needed for the arc. Perfect for lock on targets.")]
-        public bool recalculateSpeed = false;
+        public bool recalculateSpeed;
 
-        [Header("Extra Effects")]
-        [Tooltip("If you want to activate an effect that is child or instantiate it on client. For 'child' effect, use destroy delay.")]
-        public bool instantiateImpact = false;
-        [FormerlySerializedAs("ImpactEffect")]
+        [Header("Effects")]
+        public bool instantiateImpact;
         public GameObject impactEffect;
-        [Tooltip("Change direction of the impact effect based on hit normal.")]
-        public bool useNormal = false;
-        [Tooltip("Perfect for arrows. If you are using 'Child effect', when the projectile despawn, the effect too.")]
-        [FormerlySerializedAs("stickTo")]
+        public bool useNormal;
         public bool stickToHitObject;
-        [Space]
-        [Tooltip("This is the effect that spawn if don't hit anything and the end of the max distance.")]
-        public bool instantiateDisappear = false;
+        public bool instantiateDisappear;
         public GameObject disappearEffect;
 
         private Vector3 _initialPosition;
@@ -62,68 +50,88 @@ namespace MultiplayerARPG
             float missileSpeed,
             IDamageableEntity lockingTarget)
         {
-            base.Setup(instigator, weapon, simulateSeed, triggerIndex, spreadIndex, damageAmounts, skill, skillLevel, hitRegisterData, missileDistance, missileSpeed, lockingTarget);
+            base.Setup(instigator, weapon, simulateSeed, triggerIndex, spreadIndex,
+                damageAmounts, skill, skillLevel, hitRegisterData,
+                missileDistance, missileSpeed, lockingTarget);
 
-            // Initial configuration
             _initialPosition = CacheTransform.position;
 
-            // Configuration bullet and effects
-            if (projectileObject)
-                projectileObject.SetActive(true);
-
-            if (impactEffect && !instantiateImpact)
+            // Client-only visual setup
+            if (IsClient)
             {
-                impactEffect.SetActive(false);
-                _defaultImpactEffectPosition = impactEffect.transform.localPosition;
+                if (projectileObject)
+                    projectileObject.SetActive(true);
+
+                if (impactEffect && !instantiateImpact)
+                {
+                    impactEffect.SetActive(false);
+                    _defaultImpactEffectPosition = impactEffect.transform.localPosition;
+                }
+
+                if (disappearEffect && !instantiateDisappear)
+                    disappearEffect.SetActive(false);
             }
 
-            if (disappearEffect && !instantiateDisappear)
-                disappearEffect.SetActive(false);
-
-            // Movement
-            Vector3 targetPos = _initialPosition + (CacheTransform.forward * missileDistance);
+            // Server-side trajectory
+            Vector3 targetPos = _initialPosition + CacheTransform.forward * missileDistance;
             if (lockingTarget != null && lockingTarget.CurrentHp > 0)
                 targetPos = lockingTarget.GetTransform().position;
 
             float dist = Vector3.Distance(_initialPosition, targetPos);
-            float yOffset = -transform.forward.y;
+            float yOffset = -CacheTransform.forward.y;
 
             Vector3 gravity = Vector3.zero;
             if (hasGravity)
-            {
-                gravity = Physics.gravity;
-                if (customGravity != Vector3.zero)
-                    gravity = customGravity;
-            }
+                gravity = customGravity != Vector3.zero ? customGravity : Physics.gravity;
 
             if (recalculateSpeed)
                 missileSpeed = LaunchSpeed(dist, yOffset, gravity.magnitude, angle * Mathf.Deg2Rad);
 
             if (useAngle)
-                CacheTransform.eulerAngles = new Vector3(CacheTransform.eulerAngles.x - angle, CacheTransform.eulerAngles.y, CacheTransform.eulerAngles.z);
+                CacheTransform.eulerAngles = new Vector3(
+                    CacheTransform.eulerAngles.x - angle,
+                    CacheTransform.eulerAngles.y,
+                    CacheTransform.eulerAngles.z);
 
             _bulletVelocity = CacheTransform.forward * missileSpeed;
         }
 
-        public float LaunchSpeed(float distance, float yOffset, float gravity, float angle)
+        protected override void Update()
         {
-            float speed = (distance * Mathf.Sqrt(gravity) * Mathf.Sqrt(1 / Mathf.Cos(angle))) / Mathf.Sqrt(2 * distance * Mathf.Sin(angle) + 2 * yOffset * Mathf.Cos(angle));
-            return speed;
+            // SERVER ONLY
+            if (!IsServer || _destroying)
+                return;
+
+            if (hasGravity)
+            {
+                Vector3 gravity = customGravity != Vector3.zero ? customGravity : Physics.gravity;
+                _bulletVelocity += gravity * Time.deltaTime;
+            }
+
+            HitDetect();
+
+            if (_destroying)
+                return;
+
+            CacheTransform.rotation = Quaternion.LookRotation(_bulletVelocity);
+            CacheTransform.position += _bulletVelocity * Time.deltaTime;
+
+            if (Vector3.Distance(_initialPosition, CacheTransform.position) > _missileDistance &&
+                Time.unscaledTime - _launchTime >= _missileDuration)
+            {
+                NoImpact();
+            }
         }
 
         public override void HitDetect()
         {
-            if (Destroying)
-                return;
-
-            if (!_previousPosition.HasValue)
+            if (!IsServer || _destroying || !_previousPosition.HasValue)
                 return;
 
             int hitCount = 0;
             Vector3 dir = (CacheTransform.position - _previousPosition.Value).normalized;
             float dist = Vector3.Distance(CacheTransform.position, _previousPosition.Value);
-            // Raycast to previous position to check is it hitting something or not
-            // If hit, explode
+
             switch (hitDetectionMode)
             {
                 case HitDetectionMode.Raycast:
@@ -133,157 +141,129 @@ namespace MultiplayerARPG
                     hitCount = Physics.SphereCastNonAlloc(_previousPosition.Value, sphereCastRadius, dir, _hits3D, dist, hitLayers);
                     break;
                 case HitDetectionMode.BoxCast:
-                    hitCount = Physics.BoxCastNonAlloc(_previousPosition.Value, boxCastSize * 0.5f, dir, _hits3D, CacheTransform.rotation, dist, hitLayers);
+                    hitCount = Physics.BoxCastNonAlloc(_previousPosition.Value,
+                        boxCastSize * 0.5f, dir, _hits3D, CacheTransform.rotation, dist, hitLayers);
                     break;
             }
 
-            RaycastHit hit;
             for (int i = 0; i < hitCount; ++i)
             {
-                hit = _hits3D[i];
+                RaycastHit hit = _hits3D[i];
+                if (hit.transform == null)
+                    continue;
+
                 if (!hit.transform.gameObject.GetComponent<IUnHittable>().IsNull())
                     continue;
 
                 if (useNormal)
                     _normal = hit.normal;
+
                 _hitPos = hit.point;
-
-                // Hit itself, no impact
-                if (_instigator.Id != null && _instigator.TryGetEntity(out BaseGameEntity instigatorEntity) && instigatorEntity.transform.root == hit.transform.root)
-                    continue;
-
                 Impact(hit.collider.gameObject);
 
-                // Already hit something
-                if (Destroying)
+                if (_destroying)
                     break;
             }
+
+            _previousPosition = CacheTransform.position;
         }
 
-        protected override void Update()
+        private void Impact(GameObject hitted)
         {
-            if (Destroying)
+            if (_destroying)
                 return;
 
-            if (hasGravity)
-            {
-                Vector3 gravity = Physics.gravity;
-                if (customGravity != Vector3.zero)
-                    gravity = customGravity;
-                _bulletVelocity += gravity * Time.deltaTime;
-            }
-
-            HitDetect();
-
-            if (Destroying)
-                return;
-
-            CacheTransform.rotation = Quaternion.LookRotation(_bulletVelocity);
-            CacheTransform.position += _bulletVelocity * Time.deltaTime;
-
-            // Moved too far from `_initialPosition`
-            if (Vector3.Distance(_initialPosition, CacheTransform.position) > _missileDistance && Time.unscaledTime - _launchTime >= _missileDuration)
-                NoImpact();
-        }
-
-        protected void NoImpact()
-        {
-            if (Destroying)
-                return;
-
-            if (disappearEffect && IsClient)
-            {
-                if (onProjectileDisappear != null)
-                    onProjectileDisappear.Invoke();
-
-                if (projectileObject)
-                    projectileObject.SetActive(false);
-
-                if (instantiateDisappear)
-                    Instantiate(disappearEffect, transform.position, CacheTransform.rotation);
-                else
-                    disappearEffect.SetActive(true);
-
-                PushBack(destroyDelay);
-                Destroying = true;
-                return;
-            }
-            PushBack();
-            Destroying = true;
-        }
-
-        protected void Impact(GameObject hitted)
-        {
-            // Check target
             if (FindTargetHitBox(hitted, true, out DamageableHitBox target))
             {
-                // Hit a hitbox
-                if (explodeDistance <= 0f && !_alreadyHitObjects.Contains(target.GetObjectId()))
-                {
-                    // If this is not going to explode, just apply damage to target
-                    _alreadyHitObjects.Add(target.GetObjectId());
+                if (explodeDistance <= 0f && _alreadyHitObjects.Add(target.GetObjectId()))
                     ApplyDamageTo(target);
-                }
+
                 OnHit(hitted);
                 return;
             }
 
-            // Hit damageable entity but it is not hitbox, skip it
             if (hitted.GetComponent<DamageableEntity>() != null)
                 return;
 
-            // Hit ground, wall, tree, etc.
             OnHit(hitted);
         }
 
-        protected void OnHit(GameObject hitted)
+        private void OnHit(GameObject hitted)
         {
-            // Spawn impact effect
-            if (impactEffect && IsClient)
+            // Client FX only
+            if (IsClient && impactEffect)
             {
                 if (projectileObject)
                     projectileObject.SetActive(false);
 
                 if (instantiateImpact)
                 {
-                    Quaternion hitRot = Quaternion.identity;
-                    if (useNormal)
-                        hitRot = Quaternion.FromToRotation(Vector3.forward, _normal);
-                    GameObject newImpactEffect = Instantiate(impactEffect, _hitPos, hitRot);
+                    Quaternion rot = useNormal
+                        ? Quaternion.FromToRotation(Vector3.forward, _normal)
+                        : Quaternion.identity;
+
+                    GameObject fx = Object.Instantiate(impactEffect, _hitPos, rot);
                     if (stickToHitObject)
-                        newImpactEffect.transform.parent = hitted.transform;
-                    newImpactEffect.SetActive(true);
+                        fx.transform.SetParent(hitted.transform);
                 }
                 else
                 {
                     if (useNormal)
-                        impactEffect.transform.rotation = Quaternion.FromToRotation(Vector3.forward, _normal);
+                        impactEffect.transform.rotation =
+                            Quaternion.FromToRotation(Vector3.forward, _normal);
+
                     impactEffect.transform.position = _hitPos;
                     if (stickToHitObject)
-                        impactEffect.transform.parent = hitted.transform;
+                        impactEffect.transform.SetParent(hitted.transform);
+
                     impactEffect.SetActive(true);
                 }
             }
 
-            // Hit something
             if (explodeDistance > 0f)
-            {
-                // Explode immediately when hit something
                 Explode();
-            }
 
             PushBack(destroyDelay);
-            Destroying = true;
+            _destroying = true;
+        }
+
+        private void NoImpact()
+        {
+            if (_destroying)
+                return;
+
+            if (IsClient && disappearEffect)
+            {
+                onProjectileDisappear?.Invoke();
+
+                if (projectileObject)
+                    projectileObject.SetActive(false);
+
+                if (instantiateDisappear)
+                    Object.Instantiate(disappearEffect, transform.position, CacheTransform.rotation);
+                else
+                    disappearEffect.SetActive(true);
+            }
+
+            PushBack();
+            _destroying = true;
         }
 
         protected override void OnPushBack()
         {
             if (impactEffect && stickToHitObject && !instantiateImpact)
             {
-                impactEffect.transform.parent = CacheTransform;
+                impactEffect.transform.SetParent(CacheTransform);
                 impactEffect.transform.localPosition = _defaultImpactEffectPosition;
             }
+
             base.OnPushBack();
+        }
+
+        public float LaunchSpeed(float distance, float yOffset, float gravity, float angle)
+        {
+            return (distance * Mathf.Sqrt(gravity) * Mathf.Sqrt(1f / Mathf.Cos(angle))) /
+                   Mathf.Sqrt(2f * distance * Mathf.Sin(angle) + 2f * yOffset * Mathf.Cos(angle));
         }
     }
 }
